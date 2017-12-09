@@ -9,12 +9,17 @@ var bodyParser = require('body-parser');
 var Twitter = require('twitter');
 var Emergency = require('./model/emergencies');
 
+var googleMapsClient = require('@google/maps').createClient({
+  key: 'AIzaSyCW4K_gNy_TFkFV_na57dlPq_6SUx79jbk'
+});
+
 var client = new Twitter({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
   consumer_secret: process.env.TWITTER_CONSUMER_SERCRET,
   access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
+
 
 function getTweets(){
   console.log('getTweets');
@@ -26,21 +31,73 @@ function getTweets(){
         var start = text.indexOf('*') + 1;
         var end = text.indexOf('*', start);
         var description = text.slice(start, end);
-        var time = JSON.stringify(tweet.created_at);
+        // var time = JSON.stringify(tweet.created_at);
+        var time = tweet.created_at;
         console.log(address);
         console.log(description);
         console.log(time);
-        var result = { "address": address, "description": description, "time": time};
+        // var position = geocodeAddress(address);
+        // console.log(position);
+        // var result = { "address": address, "position": position, "description": description, "time": time};
 
-        axios.post('http://localhost:3001/api/emergencies', result)
-        .then(res => {
-          console.log("Successfully saved");;
-        })
-        .catch(err => {
-          console.error(err);
+        // googleMapsClient.geocode( { 'address': address + ' Isla Vista, CA' }, (results, status) => {
+        //       if (status === "OK"){
+        //         console.log("geocoding:");
+        //         var position = results[0].geometry.location;
+        //         var pos = {"lat": position.lat(), "lng": position.lng()};
+        //         var emergency = { "address": address, "position": pos, "description": description, "time": time};
+        //
+        //         axios.post('http://localhost:3001/api/emergencies', result)
+        //         .then(res => {
+        //           console.log("Successfully saved");;
+        //         })
+        //         .catch(err => {
+        //           console.error(err);
+        //         });
+        //       }
+        //     })
+
+        googleMapsClient.geocode({
+          address: address + ' Isla Vista, CA'
+        }, function(err, response) {
+          if (!err) {
+            // console.log(response);
+            console.log('geocoding');
+            // console.log(response.json.results[0].geometry.location);
+            var position = response.json.results[0].geometry.location;
+            console.log(position);
+            var emergency = { "address": address, "position": position, "description": description, "time": time};
+            console.log(emergency);
+            axios.post('http://localhost:3001/api/emergencies', emergency)
+            .then(res => {
+              console.log("Successfully saved");;
+            })
+            .catch(err => {
+              console.log("error!");
+              console.error(err);
+            });
+
+
+          }
         });
+
       }
     });
+  });
+}
+
+function geocodeAddress(address) {
+  googleMapsClient.geocode({
+    address: address + ' Isla Vista, CA'
+  }, function(err, response) {
+    if (!err) {
+      // console.log(response);
+      console.log('geocoding');
+      // console.log(response.json.results[0].geometry.location);
+      var position = response.json.results[0].geometry.location;
+      console.log(position);
+      return position;
+    }
   });
 }
 
@@ -53,6 +110,7 @@ var port = process.env.API_PORT || 3001;
 
 //db config
 var mongoDB = `mongodb://admin:admin@ds035683.mlab.com:35683/iv-emergency-map`;
+mongoose.Promise = global.Promise;
 mongoose.connect(mongoDB, { useMongoClient: true })
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -81,20 +139,21 @@ router.get('/', function(req, res) {
 //adding the /emergencies route to our /api router
 router.route('/emergencies')
   //retrieve all emergencies from the database
-  .get(function(req, res) {
-    //looks at our Emergency Schema
-    Emergency.find(function(err, emergencies) {
-      if (err)
-        res.send(err);
-      //responds with a json object of our database emergencies.
-      res.json(emergencies)
-    });
-  })
+  // .get(function(req, res) {
+  //   //looks at our Emergency Schema
+  //   Emergency.find(function(err, emergencies) {
+  //     if (err)
+  //       res.send(err);
+  //     //responds with a json object of our database emergencies.
+  //     res.json(emergencies)
+  //   });
+  // })
   //post new emergency to the database
   .post(function(req, res) {
     var emergency = new Emergency();
     //body parser lets us use the req.body
     emergency.address = req.body.address;
+    emergency.position = req.body.position;
     emergency.description = req.body.description;
     emergency.time = req.body.time;
 
@@ -105,6 +164,17 @@ router.route('/emergencies')
     });
   });
 
+  router.route('/emergencies')
+    //retrieve all emergencies from the database
+    .get(function(req, res) {
+      var q = Emergency.find().sort({time: -1}).limit(10);
+      q.exec(function(err, emergencies) {
+        if (err)
+          res.send(err);
+        //responds with a json object of our database emergencies.
+        res.json(emergencies)
+      })
+    })
 
 //Use our router configuration when we call /api
 app.use('/api', router);

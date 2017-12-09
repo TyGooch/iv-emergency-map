@@ -8,6 +8,10 @@ var Schema = mongoose.Schema;
 //the shape of your database entries.
 var EmergenciesSchema = new Schema({
   address: String,
+  position: {
+    lat: Number,
+    lng: Number
+  },
   description: String,
   time: Date
 });

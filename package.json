@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@google/maps": "^0.4.5",
     "axios": "^0.17.1",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
@@ -11,6 +12,7 @@
     "nodemon": "^1.12.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-gmaps": "^1.7.0",
     "react-scripts": "1.0.17",
     "twitter": "^1.7.1"
   },
