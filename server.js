@@ -36,44 +36,18 @@ function getTweets(){
         console.log(address);
         console.log(description);
         console.log(time);
-        // var position = geocodeAddress(address);
-        // console.log(position);
-        // var result = { "address": address, "position": position, "description": description, "time": time};
-
-        // googleMapsClient.geocode( { 'address': address + ' Isla Vista, CA' }, (results, status) => {
-        //       if (status === "OK"){
-        //         console.log("geocoding:");
-        //         var position = results[0].geometry.location;
-        //         var pos = {"lat": position.lat(), "lng": position.lng()};
-        //         var emergency = { "address": address, "position": pos, "description": description, "time": time};
-        //
-        //         axios.post('http://localhost:3001/api/emergencies', result)
-        //         .then(res => {
-        //           console.log("Successfully saved");;
-        //         })
-        //         .catch(err => {
-        //           console.error(err);
-        //         });
-        //       }
-        //     })
 
         googleMapsClient.geocode({
           address: address + ' Isla Vista, CA'
         }, function(err, response) {
           if (!err) {
-            // console.log(response);
-            console.log('geocoding');
-            // console.log(response.json.results[0].geometry.location);
             var position = response.json.results[0].geometry.location;
-            console.log(position);
             var emergency = { "address": address, "position": position, "description": description, "time": time};
-            console.log(emergency);
             axios.post('http://localhost:3001/api/emergencies', emergency)
             .then(res => {
               console.log("Successfully saved");;
             })
             .catch(err => {
-              console.log("error!");
               console.error(err);
             });
 
@@ -91,11 +65,7 @@ function geocodeAddress(address) {
     address: address + ' Isla Vista, CA'
   }, function(err, response) {
     if (!err) {
-      // console.log(response);
-      console.log('geocoding');
-      // console.log(response.json.results[0].geometry.location);
       var position = response.json.results[0].geometry.location;
-      console.log(position);
       return position;
     }
   });
@@ -139,15 +109,15 @@ router.get('/', function(req, res) {
 //adding the /emergencies route to our /api router
 router.route('/emergencies')
   //retrieve all emergencies from the database
-  // .get(function(req, res) {
-  //   //looks at our Emergency Schema
-  //   Emergency.find(function(err, emergencies) {
-  //     if (err)
-  //       res.send(err);
-  //     //responds with a json object of our database emergencies.
-  //     res.json(emergencies)
-  //   });
-  // })
+  .get(function(req, res) {
+    //looks at our Emergency Schema
+    Emergency.find(function(err, emergencies) {
+      if (err)
+        res.send(err);
+      //responds with a json object of our database emergencies.
+      res.json(emergencies)
+    });
+  })
   //post new emergency to the database
   .post(function(req, res) {
     var emergency = new Emergency();
@@ -164,7 +134,7 @@ router.route('/emergencies')
     });
   });
 
-  router.route('/emergencies')
+  router.route('/emergencies/latest')
     //retrieve all emergencies from the database
     .get(function(req, res) {
       var q = Emergency.find().sort({time: -1}).limit(10);

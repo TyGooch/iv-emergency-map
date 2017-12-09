@@ -4,16 +4,6 @@ import axios from 'axios';
 
 const google = window.google;
 
-// const mapCenter = { lat: 34.4110, lng: -119.8610 };
-
-// I made some lat/lng points for some good burrito spots
-// const burritos = [
-//   { lat: 37.775785, lng: -122.445979, name: "Papalote" },
-//   { lat: 37.772045, lng: -122.437015, name: "The Little Chihuahua" },
-//   { lat: 37.781899, lng: -122.410426, name: "Cancun" }
-// ];
-
-// just a normal react component class :)
 export default class Map extends React.Component {
 
   constructor(props) {
@@ -25,6 +15,7 @@ export default class Map extends React.Component {
     this.loadEmergenciesFromServer = this.loadEmergenciesFromServer.bind(this);
     this.initializeState = this.initializeState.bind(this);
     this.createMarker = this.createMarker.bind(this);
+    this.timeAgo = this.timeAgo.bind(this);
   }
 
   componentDidMount() {
@@ -32,7 +23,9 @@ export default class Map extends React.Component {
 
     const options = {
       center: { lat: 34.4110, lng: -119.8610 },
-      zoom: 15
+      zoom: 15,
+      disableDefaultUI: true,
+      zoomControl: true
     };
     this.map = new google.maps.Map(map, options);
     this.infowindow = new google.maps.InfoWindow({
@@ -73,17 +66,11 @@ export default class Map extends React.Component {
    }
 
   createMarkers(emergencies) {
-    console.log(this.state.markers);
     if(this.state.markers.length >= 10){
       this.state.markers.slice(-(emergencies.length)).forEach(marker => { marker.setMap(null)});
     }
     emergencies.forEach(this.createMarker);
   }
-  //
-  // handleMarkerClick(emergency, marker) {
-  //   this.infowindow.close();
-  //   this.infowindow.open(this.map, marker);
-  // }
 
   createMarker(emergency) {
     const pos = new google.maps.LatLng(emergency.position.lat, emergency.position.lng);
@@ -92,8 +79,10 @@ export default class Map extends React.Component {
       map: this.map
     });
     var infowindow = this.infowindow;
-
-    var contentString = '<div><h3>' + emergency.address + '</h3><p>' + emergency.time + '<br>' + emergency.description + '</p></div>'
+    if(emergency.description.includes("Vehicle Acc")) {
+      emergency.description = "Vehicle Accident";
+    }
+    var contentString = '<div><h3>' + emergency.address + '</h3><p>' + this.timeAgo(emergency.time) + '<br>' + emergency.description + '</p></div>'
 
     marker.addListener('click', function() {
       infowindow.setContent(contentString);
@@ -106,6 +95,60 @@ export default class Map extends React.Component {
       this.setState({markers: this.state.markers.slice(0,8).concat([marker])});
     }
   }
+
+    timeAgo(dateString) {
+        var rightNow = new Date();
+        var then = new Date(dateString);
+
+        var diff = rightNow - then;
+
+        var second = 1000,
+        minute = second * 60,
+        hour = minute * 60,
+        day = hour * 24,
+        week = day * 7;
+
+        if (isNaN(diff) || diff < 0) {
+            return ""; // return blank string if unknown
+        }
+
+        if (diff < second * 2) {
+            // within 2 seconds
+            return "right now";
+        }
+
+        if (diff < minute) {
+            return Math.floor(diff / second) + " seconds ago";
+        }
+
+        if (diff < minute * 2) {
+            return "about 1 minute ago";
+        }
+
+        if (diff < hour) {
+            return Math.floor(diff / minute) + " minutes ago";
+        }
+
+        if (diff < hour * 2) {
+            return "about 1 hour ago";
+        }
+
+        if (diff < day) {
+            return  Math.floor(diff / hour) + " hours ago";
+        }
+
+        if (diff > day && diff < day * 2) {
+            return "yesterday";
+        }
+
+        if (diff < day * 365) {
+            return Math.floor(diff / day) + " days ago";
+        }
+
+        else {
+            return "over a year ago";
+        }
+      }
 
   render() {
     return (
