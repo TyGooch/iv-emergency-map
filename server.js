@@ -31,9 +31,6 @@ function getTweets(){
         var end = text.indexOf('*', start);
         var description = text.slice(start, end);
         var time = tweet.created_at;
-        console.log(address);
-        console.log(description);
-        console.log(time);
 
         // Account for incomplete addresses/street corners
         if(address.includes('/')){
