@@ -1,7 +1,6 @@
 //server.js
 'use strict'
 
-//first we import our dependencies...
 var express = require('express');
 var axios = require('axios');
 var mongoose = require('mongoose');
@@ -31,7 +30,6 @@ function getTweets(){
         var start = text.indexOf('*') + 1;
         var end = text.indexOf('*', start);
         var description = text.slice(start, end);
-        // var time = JSON.stringify(tweet.created_at);
         var time = tweet.created_at;
         console.log(address);
         console.log(description);
@@ -42,6 +40,7 @@ function getTweets(){
           address = address.replace('/', '&')
         }
 
+        // Geocode address and save it to db
         googleMapsClient.geocode({
           address: address + ' Isla Vista, CA'
         }, function(err, response) {
@@ -55,24 +54,10 @@ function getTweets(){
             .catch(err => {
               console.error(err);
             });
-
-
           }
         });
-
       }
     });
-  });
-}
-
-function geocodeAddress(address) {
-  googleMapsClient.geocode({
-    address: address + ' Isla Vista, CA'
-  }, function(err, response) {
-    if (!err) {
-      var position = response.json.results[0].geometry.location;
-      return position;
-    }
   });
 }
 
@@ -90,7 +75,6 @@ mongoose.connect(mongoDB, { useMongoClient: true })
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-//now we should configure the API to use bodyParser and look for JSON data in the request body
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -101,17 +85,15 @@ app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
 
-  //and remove cacheing so we get the most recent emergencies
+  // remove cacheing
   res.setHeader('Cache-Control', 'no-cache');
   next();
 });
 
-//now  we can set the route path & initialize the API
 router.get('/', function(req, res) {
   res.json({ message: 'API Initialized!'});
 });
 
-//adding the /emergencies route to our /api router
 router.route('/emergencies')
   //retrieve all emergencies from the database
   // .get(function(req, res) {
@@ -123,10 +105,8 @@ router.route('/emergencies')
   //     res.json(emergencies)
   //   });
   // })
-  //post new emergency to the database
   .post(function(req, res) {
     var emergency = new Emergency();
-    //body parser lets us use the req.body
     emergency.address = req.body.address;
     emergency.position = req.body.position;
     emergency.description = req.body.description;
@@ -140,7 +120,7 @@ router.route('/emergencies')
   });
 
   router.route('/emergencies')
-    //retrieve all emergencies from the database
+    //retrieve latest 10 emergencies from db
     .get(function(req, res) {
       var q = Emergency.find().sort({time: -1}).limit(10);
       q.exec(function(err, emergencies) {
@@ -151,12 +131,10 @@ router.route('/emergencies')
       })
     })
 
-//Use our router configuration when we call /api
+//Use router config when making calls to /api
 app.use('/api', router);
 
-//starts the server and listens for requests
 app.listen(port, function() {
-  // populateTweets();
   getTweets();
   console.log(`api running on port ${port}`);
 });
