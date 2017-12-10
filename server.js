@@ -37,6 +37,11 @@ function getTweets(){
         console.log(description);
         console.log(time);
 
+        // Account for incomplete addresses/street corners
+        if(address.includes('/')){
+          address = address.replace('/', '&')
+        }
+
         googleMapsClient.geocode({
           address: address + ' Isla Vista, CA'
         }, function(err, response) {
@@ -109,15 +114,15 @@ router.get('/', function(req, res) {
 //adding the /emergencies route to our /api router
 router.route('/emergencies')
   //retrieve all emergencies from the database
-  .get(function(req, res) {
-    //looks at our Emergency Schema
-    Emergency.find(function(err, emergencies) {
-      if (err)
-        res.send(err);
-      //responds with a json object of our database emergencies.
-      res.json(emergencies)
-    });
-  })
+  // .get(function(req, res) {
+  //   //looks at our Emergency Schema
+  //   Emergency.find(function(err, emergencies) {
+  //     if (err)
+  //       res.send(err);
+  //     //responds with a json object of our database emergencies.
+  //     res.json(emergencies)
+  //   });
+  // })
   //post new emergency to the database
   .post(function(req, res) {
     var emergency = new Emergency();
@@ -134,7 +139,7 @@ router.route('/emergencies')
     });
   });
 
-  router.route('/emergencies/latest')
+  router.route('/emergencies')
     //retrieve all emergencies from the database
     .get(function(req, res) {
       var q = Emergency.find().sort({time: -1}).limit(10);

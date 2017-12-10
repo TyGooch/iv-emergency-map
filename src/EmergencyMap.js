@@ -1,117 +1,76 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Gmaps, Marker, InfoWindow, Circle} from 'react-gmaps';
-import axios from 'axios';
+// import { withRouter } from 'react-router-dom';
 
-const google = window.google;
-let geocoder = new google.maps.Geocoder();
+import MarkerManager from './marker_manager';
 
+const getCoordsObj = latLng => ({
+  lat: latLng.lat(),
+  lng: latLng.lng()
+});
 
-const coords = {
-  lat: 34.4110,
-  lng: -119.8610
+const mapOptions = {
+  center: { lat: 34.4110, lng: -119.8610 },
+  zoom: 15,
+  disableDefaultUI: true,
+  zoomControl: true
 };
 
-const params = {v: '3.exp', key: process.env.GOOGLE_MAPS_KEY};
-
 export default class EmergencyMap extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-        data: [],
-        markers: [],
+  componentDidMount() {
+    const map = this.refs.map;
+    this.map = new google.maps.Map(map, mapOptions);
+    this.MarkerManager = new MarkerManager(this.map, this.handleMarkerClick.bind(this));
+    if (this.props.singleEmergency) {
+      this.props.fetchEmergency(this.props.benchId);
+    } else {
+      this.registerListeners();
+      this.MarkerManager.updateMarkers(this.props.emergencies);
     }
-    this.loadEmergenciesFromServer = this.loadEmergenciesFromServer.bind(this);
-    this.createMarkers = this.createMarkers.bind(this);
   }
 
-  loadEmergenciesFromServer() {
-    console.log(this.state.markers);
-   axios.get('http://localhost:3001/api/emergencies')
-     .then(res => {
-       if( this.state.data.length !== res.data.length ){
-         var newData = res.data.filter(emergency => this.state.data.indexOf(emergency) < 0);
-         this.createMarkers(newData);
-         this.setState({ data: res.data });
-       }
-     }
-   )
- }
-
-  createMarkers(emergencies) {
-    // console.log(this.state.markers);
-    emergencies.forEach(emergency => {
-      geocoder.geocode( { 'address': emergency.address + ' Isla Vista, CA' }, (results, status) => {
-        if (status === "OK"){
-          var position = results[0].geometry.location;
-          this.setState({ markers: this.state.markers.concat([{lat: position.lat(), lng: position.lng(), address: emergency.address, description: emergency.description, time: emergency.time, key: emergency['_id'] }])});
-        }
-      })
-    })
+  componentDidUpdate() {
+    if (this.props.singleEmergency) {
+      const targetEmergencyKey = Object.keys(this.props.emergencies)[0];
+      const targetEmergency = this.props.emergencies[targetEmergencyKey];
+      this.MarkerManager.updateMarkers([targetEmergency]); //grabs only that one bench
+    } else {
+      this.MarkerManager.updateMarkers(this.props.emergencies);
+    }
   }
 
-  onMapCreated(map) {
-    map.setOptions({
-      disableDefaultUI: true
+  registerListeners() {
+    google.maps.event.addListener(this.map, 'idle', () => {
+      const { north, south, east, west } = this.map.getBounds().toJSON();
+      const bounds = {
+        northEast: { lat:north, lng: east },
+        southWest: { lat: south, lng: west } };
+      this.props.updateFilter('bounds', bounds);
+    });
+    google.maps.event.addListener(this.map, 'click', (event) => {
+      const coords = getCoordsObj(event.latLng);
+      this.handleClick(coords);
     });
   }
-  onCloseClick() {
-    console.log('onCloseClick');
+
+  handleMarkerClick(bench) {
+    this.props.history.push(`emergencies/${bench.id}`);
   }
 
-  onClick(e) {
-    console.log('onClick', e);
-  }
-
-  componentDidMount(){
-    this.loadEmergenciesFromServer();
-    console.log(this.state.data);
-    // this.createMarkers();
-    setInterval(this.loadEmergenciesFromServer, 2000)
+  handleClick(coords) {
+    this.props.history.push({
+      pathname: 'emergencies/new',
+      search: `lat=${coords.lat}&lng=${coords.lng}`
+    });
   }
 
   render() {
     return (
-      <Gmaps
-        width={'800px'}
-        height={'600px'}
-        lat={coords.lat}
-        lng={coords.lng}
-        zoom={15}
-        loadingMessage={'Loading...'}
-        params={params}
-        onMapCreated={this.onMapCreated}
-      >
-        {this.state.markers.map((marker, i) =>{
-            return(
-              <Marker
-                lat={marker.lat}
-                lng={marker.lng}
-              />
-            )
-          })}
-        {this.state.markers.map((marker, i) =>{
-            return(
-              <InfoWindow
-                lat={marker.lat}
-                lng={marker.lng}
-                content={
-                  '<div class="infoContent">' +
-                    '<h3 class="emergencyTitle">' + marker.address + '</h3>' +
-                    '<div class="infoBody">' +
-                      '<div class="infoTime"><b>' + marker.time + '</b></div>' +
-                      '<div class="infoDescription"><p>' + marker.description + '</p></div>' +
-                    '</div>' +
-                  '</div>'
-                }
-                onCloseClick={this.onCloseClick}
-                onClick={this.onClick}
-              />
-            )
-          })}
-
-      </Gmaps>
+      <div className="map" ref="map">
+        Map
+      </div>
     );
   }
+}
 
-};
+// export default withRouter(EmergencyMap);

@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const google = window.google;
 
-export default class Map extends React.Component {
+export default class GoogleMap extends React.Component {
 
   constructor(props) {
     super(props);
@@ -15,7 +15,7 @@ export default class Map extends React.Component {
     this.loadEmergenciesFromServer = this.loadEmergenciesFromServer.bind(this);
     this.initializeState = this.initializeState.bind(this);
     this.createMarker = this.createMarker.bind(this);
-    // this.showHeatMap = this.showHeatMap.bind(this);
+    this.showHeatMap = this.showHeatMap.bind(this);
     this.timeAgo = this.timeAgo.bind(this);
   }
 
