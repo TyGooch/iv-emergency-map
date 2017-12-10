@@ -15,8 +15,7 @@ export default class Map extends React.Component {
     this.loadEmergenciesFromServer = this.loadEmergenciesFromServer.bind(this);
     this.initializeState = this.initializeState.bind(this);
     this.createMarker = this.createMarker.bind(this);
-    // this.showHeatMap = this.showHeatMap.bind(this);
-    this.timeAgo = this.timeAgo.bind(this);
+    this.parseTime = this.parseTime.bind(this);
   }
 
   componentDidMount() {
@@ -80,11 +79,12 @@ export default class Map extends React.Component {
       position: pos,
       map: this.map
     });
+
     var infowindow = this.infowindow;
     if(emergency.description.includes("Vehicle Acc")) {
       emergency.description = "Vehicle Accident";
     }
-    var contentString = '<div><h3>' + emergency.address + '</h3><p>' + this.timeAgo(emergency.time) + '<br>' + emergency.description + '</p></div>'
+    var contentString = '<div><h3>' + emergency.address + '</h3><p>' + this.parseTime(emergency.time) + '<br>' + emergency.description + '</p></div>'
 
     marker.addListener('click', function() {
       infowindow.setContent(contentString);
@@ -109,59 +109,59 @@ export default class Map extends React.Component {
     heatmap.setMap(this.map);
   }
 
-    timeAgo(dateString) {
-        var rightNow = new Date();
-        var then = new Date(dateString);
+  parseTime(dateString) {
+    var rightNow = new Date();
+    var then = new Date(dateString);
 
-        var diff = rightNow - then;
+    var diff = rightNow - then;
 
-        var second = 1000,
-        minute = second * 60,
-        hour = minute * 60,
-        day = hour * 24,
-        week = day * 7;
+    var second = 1000,
+    minute = second * 60,
+    hour = minute * 60,
+    day = hour * 24,
+    week = day * 7;
 
-        if (isNaN(diff) || diff < 0) {
-            return ""; // return blank string if unknown
-        }
+    if (isNaN(diff) || diff < 0) {
+        return ""; // return blank string if unknown
+    }
 
-        if (diff < second * 2) {
-            // within 2 seconds
-            return "right now";
-        }
+    if (diff < second * 2) {
+        // within 2 seconds
+        return "right now";
+    }
 
-        if (diff < minute) {
-            return Math.floor(diff / second) + " seconds ago";
-        }
+    if (diff < minute) {
+        return Math.floor(diff / second) + " seconds ago";
+    }
 
-        if (diff < minute * 2) {
-            return "about 1 minute ago";
-        }
+    if (diff < minute * 2) {
+        return "about 1 minute ago";
+    }
 
-        if (diff < hour) {
-            return Math.floor(diff / minute) + " minutes ago";
-        }
+    if (diff < hour) {
+        return Math.floor(diff / minute) + " minutes ago";
+    }
 
-        if (diff < hour * 2) {
-            return "about 1 hour ago";
-        }
+    if (diff < hour * 2) {
+        return "about 1 hour ago";
+    }
 
-        if (diff < day) {
-            return  Math.floor(diff / hour) + " hours ago";
-        }
+    if (diff < day) {
+        return  Math.floor(diff / hour) + " hours ago";
+    }
 
-        if (diff > day && diff < day * 2) {
-            return "yesterday";
-        }
+    if (diff > day && diff < day * 2) {
+        return "yesterday";
+    }
 
-        if (diff < day * 365) {
-            return Math.floor(diff / day) + " days ago";
-        }
+    if (diff < day * 365) {
+        return Math.floor(diff / day) + " days ago";
+    }
 
-        else {
-            return "over a year ago";
-        }
-      }
+    else {
+        return "over a year ago";
+    }
+  }
 
   render() {
     return (
