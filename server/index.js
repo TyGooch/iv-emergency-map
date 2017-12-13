@@ -12,13 +12,18 @@ var googleMapsClient = require('@google/maps').createClient({
   key: 'AIzaSyCW4K_gNy_TFkFV_na57dlPq_6SUx79jbk'
 });
 
+// var client = new Twitter({
+//   consumer_key: process.env.TWITTER_CONSUMER_KEY,
+//   consumer_secret: process.env.TWITTER_CONSUMER_SERCRET,
+//   access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+//   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+// });
 var client = new Twitter({
-  consumer_key: process.env.TWITTER_CONSUMER_KEY,
-  consumer_secret: process.env.TWITTER_CONSUMER_SERCRET,
-  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+  consumer_key: 'tLXXvzyhVn9asv5eJsryx6Sbh',
+  consumer_secret: 'ACDAmsDfFRayLe7tCRXKOu9FR8FDBI4NUxBcehbUmTK09ouxBY',
+  access_token_key: '2500408164-WP3f2wkVYYdXChTTxs7ssOu4z8o65sa7XhRMLa9',
+  access_token_secret: '4XOV4gQTwvlNYM1e5wD0mjht8ccd3xCX0pPISPEqcHY5w'
 });
-
 
 function getTweets(){
   console.log('getTweets');
@@ -37,6 +42,8 @@ function getTweets(){
           address = address.replace('/', '&')
         }
 
+        var port = process.env.PORT || 8080;
+        var host = process.env.HOST || '0.0.0.0';
         // Geocode address and save it to db
         googleMapsClient.geocode({
           address: address + ' Isla Vista, CA'
@@ -44,7 +51,7 @@ function getTweets(){
           if (!err) {
             var position = response.json.results[0].geometry.location;
             var emergency = { "address": address, "position": position, "description": description, "time": time};
-            axios.post('http://localhost:3001/api/emergencies', emergency)
+            axios.post(`http://${host}:${port}/api/emergencies`, emergency)
             .then(res => {
               console.log("Successfully saved");;
             })
@@ -62,8 +69,9 @@ function getTweets(){
 var app = express();
 var router = express.Router();
 
-//set our port to either a predetermined port number if you have set it up, or 3001
-var port = process.env.API_PORT || 3001;
+//set our port to either a predetermined port number if you have set it up, or 8080
+var port = process.env.PORT || 8080;
+var host = process.env.HOST || '0.0.0.0';
 
 //db config
 var mongoDB = `mongodb://admin:admin@ds035683.mlab.com:35683/iv-emergency-map`;
@@ -72,6 +80,7 @@ mongoose.connect(mongoDB, { useMongoClient: true })
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+// app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -91,17 +100,18 @@ router.get('/', function(req, res) {
   res.json({ message: 'API Initialized!'});
 });
 
+
 router.route('/emergencies')
   //retrieve all emergencies from the database
-  // .get(function(req, res) {
-  //   //looks at our Emergency Schema
-  //   Emergency.find(function(err, emergencies) {
-  //     if (err)
-  //       res.send(err);
-  //     //responds with a json object of our database emergencies.
-  //     res.json(emergencies)
-  //   });
-  // })
+  .get(function(req, res) {
+    //looks at our Emergency Schema
+    Emergency.find(function(err, emergencies) {
+      if (err)
+        res.send(err);
+      //responds with a json object of our database emergencies.
+      res.json(emergencies)
+    });
+  })
   .post(function(req, res) {
     var emergency = new Emergency();
     emergency.address = req.body.address;
@@ -116,7 +126,7 @@ router.route('/emergencies')
     });
   });
 
-  router.route('/emergencies')
+  router.route('/emergencies/latest')
     //retrieve latest 10 emergencies from db
     .get(function(req, res) {
       var q = Emergency.find().sort({time: -1}).limit(10);
@@ -131,7 +141,8 @@ router.route('/emergencies')
 //Use router config when making calls to /api
 app.use('/api', router);
 
-app.listen(port, function() {
+app.listen(port, host, function() {
   getTweets();
   console.log(`api running on port ${port}`);
+  console.log(`host running on ${host}`);
 });

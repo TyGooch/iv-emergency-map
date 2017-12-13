@@ -1,5 +1,5 @@
 {
-  "name": "react-ui",
+  "name": "client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -23,5 +23,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:3100"
+  "proxy": "http://localhost:8080"
 }

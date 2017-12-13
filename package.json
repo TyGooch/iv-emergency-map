@@ -1,30 +1,28 @@
 {
   "name": "iv-emergency-map",
   "version": "1.0.0",
-  "description": "How to use create-react-app with a custom Node API on Heroku",
+  "description": "",
   "engines": {
     "node": "6.11.x"
   },
   "scripts": {
     "start": "node server",
-    "heroku-postbuild": "cd react-ui/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+    "heroku-postbuild": "cd client/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "cacheDirectories": [
     "node_modules",
-    "react-ui/node_modules"
+    "client/node_modules"
   ],
   "dependencies": {
     "express": "^4.14.1",
+    "@google/maps": "^0.4.5",
+    "axios": "^0.17.1",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "foreman": "^2.0.0",
     "mongoose": "^4.13.6",
     "nodemon": "^1.12.1",
     "twitter": "^1.7.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mars/heroku-cra-node.git"
   },
   "keywords": [
     "node",
