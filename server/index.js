@@ -82,10 +82,10 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // app.use(cors());
+app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(express.static(path.join(__dirname, 'client/build')));
 
 //To prevent errors from Cross Origin Resource Sharing, we will set our headers to allow CORS with middleware like so:
 // app.use(function(req, res, next) {
@@ -103,39 +103,72 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 //   response.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 // });
 
-router.get('/', function(req, res) {
-  res.json({ message: 'API Initialized!'});
+// router.get('/', function(req, res) {
+//   res.json({ message: 'API Initialized!'});
+// });
+
+app.get('/api/emergencies/', function(req, res) {
+  //looks at our Emergency Schema
+  Emergency.find(function(err, emergencies) {
+    if (err)
+      res.send(err);
+    //responds with a json object of our database emergencies.
+    res.json(emergencies)
+  });
+})
+
+app.post('/api/emergencies', function(req, res) {
+  var emergency = new Emergency();
+  emergency.address = req.body.address;
+  emergency.position = req.body.position;
+  emergency.description = req.body.description;
+  emergency.time = req.body.time;
+
+  emergency.save(function(err) {
+    if (err)
+      res.send(err);
+    res.json({ message: 'Emergency successfully added!' });
+  });
 });
 
+// router.route('/emergencies')
+//   //retrieve all emergencies from the database
+//   .get(function(req, res) {
+//     //looks at our Emergency Schema
+//     Emergency.find(function(err, emergencies) {
+//       if (err)
+//         res.send(err);
+//       //responds with a json object of our database emergencies.
+//       res.json(emergencies)
+//     });
+//   })
+//   .post(function(req, res) {
+//     var emergency = new Emergency();
+//     emergency.address = req.body.address;
+//     emergency.position = req.body.position;
+//     emergency.description = req.body.description;
+//     emergency.time = req.body.time;
+// 
+//     emergency.save(function(err) {
+//       if (err)
+//         res.send(err);
+//       res.json({ message: 'Emergency successfully added!' });
+//     });
+//   });
 
-router.route('/emergencies')
-  //retrieve all emergencies from the database
-  .get(function(req, res) {
-    //looks at our Emergency Schema
-    Emergency.find(function(err, emergencies) {
-      if (err)
-        res.send(err);
-      //responds with a json object of our database emergencies.
-      res.json(emergencies)
-    });
-  })
-  .post(function(req, res) {
-    var emergency = new Emergency();
-    emergency.address = req.body.address;
-    emergency.position = req.body.position;
-    emergency.description = req.body.description;
-    emergency.time = req.body.time;
-
-    emergency.save(function(err) {
-      if (err)
-        res.send(err);
-      res.json({ message: 'Emergency successfully added!' });
-    });
-  });
-
-  router.route('/emergencies/latest')
-    //retrieve latest 10 emergencies from db
-    .get(function(req, res) {
+  // router.route('/emergencies/latest')
+  //   //retrieve latest 10 emergencies from db
+  //   .get(function(req, res) {
+  //     var q = Emergency.find().sort({time: -1}).limit(10);
+  //     q.exec(function(err, emergencies) {
+  //       if (err)
+  //         res.send(err);
+  //       //responds with a json object of our database emergencies.
+  //       res.json(emergencies)
+  //     })
+  //   })
+  // 
+    app.get('/api/emergencies/latest', function(req, res) {
       var q = Emergency.find().sort({time: -1}).limit(10);
       q.exec(function(err, emergencies) {
         if (err)
@@ -143,13 +176,13 @@ router.route('/emergencies')
         //responds with a json object of our database emergencies.
         res.json(emergencies)
       })
-    })
+    });
 
 //Use router config when making calls to /api
-app.use('/api', router);
+// app.use('/api', router);
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+  res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
 });
 
 app.listen(port, host, function() {
