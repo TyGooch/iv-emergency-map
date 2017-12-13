@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import style from './style.js'
 
 class EmergencyListItem extends Component {
   constructor(props) {
@@ -8,19 +9,20 @@ class EmergencyListItem extends Component {
     //   text: ''
     // };
     //binding all our functions to this class
-    // this.handleClick = this.handleClick.bind(this);
+    this.clickMarker = this.clickMarker.bind(this);
   }
   
-  // handleClick(marker) {
-  //   // e.preventDefault();
-  //   window.google.maps.event.trigger(marker, 'click');
-  //   // document.getElementById('gift-close').click()
-  // 
-  // }
+  clickMarker(marker) {
+    // e.preventDefault();
+    // debugger;
+    window.google.maps.event.trigger(marker, 'click');
+    // document.getElementById('gift-close').click()
+  
+  }
   
   render(){
     return(
-      <div>
+      <div className="EmergencyListItem" style={ style.EmergencyListItem } onClick={ () => this.clickMarker(this.props.marker) }>
         <h3>{ this.props.description }</h3>
         <p>
           { this.props.time }

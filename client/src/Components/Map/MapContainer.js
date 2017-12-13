@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Map from './Map';
 import EmergencyList from '../EmergencyList/EmergencyList';
+import style from './style.js'
 
 export default class MapContainer extends React.Component {
   constructor(props) {
@@ -61,9 +62,7 @@ export default class MapContainer extends React.Component {
   
   render() {
     return(
-      <div>
       <Map emergencies={ this.state.emergencies } />
-      </div>
     )
   }
   

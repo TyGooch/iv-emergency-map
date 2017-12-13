@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {mapStyle} from './mapStyle.js';
 import EmergencyList from '../EmergencyList/EmergencyList';
+import style from './style.js'
 
 const google = window.google;
 
@@ -17,6 +18,7 @@ export default class Map extends React.Component {
     this.createMarker = this.createMarker.bind(this);
     this.createMarkers = this.createMarkers.bind(this);
     this.getIconUrl = this.getIconUrl.bind(this);
+    this.markers = [];
     // this.parseTime = this.parseTime.bind(this);
   }
 
@@ -38,7 +40,7 @@ export default class Map extends React.Component {
     this.map.mapTypes.set('styled_map', styledMapType);
     this.map.setMapTypeId('styled_map');
     
-    this.markers = [];
+    // this.markers = [];
 
     this.infowindow = new google.maps.InfoWindow({
       content: ''
@@ -54,68 +56,6 @@ export default class Map extends React.Component {
 
     // setInterval(this.loadEmergenciesFromServer, 2000);
   }
-
-  // loadEmergenciesFromServer() {
-  //    // axios.get('/api/emergencies')
-  //    // axios.request({
-  //    //   method: 'get',
-  //    //   url: `http://localhost:3100/api/emergencies/latest`
-  //    // }).then(res => {
-  //        // if( this.state.emergencies[0]._id !== res.data[0]._id ){
-  //        //   var newEmergencies = res.data.filter(emergency => this.state.emergencies.indexOf(emergency) < 0);
-  //        //   this.createMarkers(newEmergencies);
-  //        //   this.setState({ emergencies: res.data });
-  //    //     }
-  //    //   }
-  //    // )
-  // 
-  //    fetch('/api/emergencies/latest')
-  //      .then(response => {
-  //        if (!response.ok) {
-  //          throw new Error(`status ${response.status}`);
-  //        }
-  //        return response.json();
-  //      })
-  //      .then(emergencies => {
-  //        if( this.state.emergencies[0]._id !== emergencies[0]._id ){
-  //          var newEmergencies = emergencies.filter(emergency => this.state.emergencies.indexOf(emergency) < 0);
-  //          this.createMarkers(newEmergencies);
-  //          this.setState({ emergencies: emergencies });
-  //        }
-  //      }).catch(e => {
-  //        this.setState({
-  //          emergencies: `API call failed: ${e}`,
-  //        });
-  //      })
-  //  }
-
-  // initializeState() {
-  //   // axios.request({
-  //   //   method: 'get',
-  //   //   url: `http://localhost:3100/api/emergencies/latest`
-  //   // }).then(res => {
-  //          // this.createMarkers(res.data);
-  //   //        this.setState({ emergencies: res.data });
-  //   //    }
-  //   //  )
-  //   fetch('/api/emergencies/latest')
-  //     .then(response => {
-  //       if (!response.ok) {
-  //         throw new Error(`status ${response.status}`);
-  //       }
-  //       return response.json();
-  //     })
-  //     .then(emergencies => {
-  //       this.createMarkers(emergencies);
-  //       this.setState({
-  //         emergencies: emergencies
-  //       });
-  //     }).catch(e => {
-  //       this.setState({
-  //         emergencies: `API call failed: ${e}`,
-  //       });
-  //     })
-  //  }
 
   createMarkers(emergencies) {
     if(this.markers.length >= 10){
@@ -180,12 +120,12 @@ export default class Map extends React.Component {
       console.log(this.props.emergencies);
       this.createMarkers(this.props.emergencies);
     }
-    // debugger;
     return (
-      <div>
-        <div id='map' ref='map'/>
+      <div style={ style.MapContainer }>
+        <div id='map' ref='map' style={style.Map}/>
         <EmergencyList 
           emergencies={ this.props.emergencies } 
+          markers={ this.markers } 
           />
       </div>
     );
