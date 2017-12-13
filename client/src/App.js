@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 // import EmergencyMap from './EmergencyMap'
-import Map from './Map'
+import Map from './Components/Map/Map'
+import MapContainer from './Components/Map/MapContainer'
+import EmergencyList from './Components/EmergencyList/EmergencyList'
 
 class App extends Component {
   render() {
@@ -9,7 +11,7 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">Isla Vista Emergencies</h1>
         </header>
-        <Map />
+        <MapContainer />
       </div>
     );
   }

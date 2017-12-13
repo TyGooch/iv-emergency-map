@@ -186,7 +186,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(port, host, function() {
-  getTweets();
+  // getTweets();
   console.log(`api running on port ${port}`);
   console.log(`host running on ${host}`);
 });
