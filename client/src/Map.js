@@ -1,10 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
 import {mapStyle} from './mapStyle.js';
 
 const google = window.google;
-// baseUrl = process.env.baseURL || "http://localhost:3001"
 
 export default class Map extends React.Component {
 
@@ -22,9 +20,9 @@ export default class Map extends React.Component {
   }
 
   componentDidMount() {
-    this.axiosInstance = axios.create({
-      baseURL: process.env.BASE_URL
-    });
+    // this.axiosInstance = axios.create({
+    //   baseURL: process.env.BASE_URL
+    // });
     const map = ReactDOM.findDOMNode(this.refs.map)
 
     const options = {

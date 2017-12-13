@@ -2,6 +2,7 @@
 'use strict'
 
 var express = require('express');
+const path = require('path');
 var axios = require('axios');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
@@ -95,6 +96,10 @@ app.use(function(req, res, next) {
   res.setHeader('Cache-Control', 'no-cache');
   next();
 });
+
+// app.get('*', function(request, response) {
+//   response.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+// });
 
 router.get('/', function(req, res) {
   res.json({ message: 'API Initialized!'});
