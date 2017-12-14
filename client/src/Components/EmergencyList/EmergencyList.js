@@ -8,6 +8,7 @@ class EmergencyList extends Component {
     }
   
     render() {
+      console.log(this.props.markers);
       let emergencyListItems = this.props.emergencies.map((emergency, idx, emergencies) => {
         return(
           <EmergencyListItem
@@ -20,9 +21,11 @@ class EmergencyList extends Component {
       })
       
       return(
-        <div className="EmergencyList" style={ style.EmergencyList }>
-          <h2>Last { this.props.emergencies.length } Emergencies </h2>
-          { emergencyListItems }
+        <div style={ style.EmergencyListContainer}>
+          <div style={ style.EmergencyListHeader }>Latest { this.props.emergencies.length } Emergencies</div>
+          <div className="EmergencyList" style={ style.EmergencyList }>
+            { emergencyListItems }
+          </div>
         </div>
       )
     }

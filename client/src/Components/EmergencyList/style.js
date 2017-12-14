@@ -1,17 +1,21 @@
 const style = {
   EmergencyList: {
-    flex: '1',
     border:'1px solid #f1f1f1',
-    padding:'0 12px',
-    height:'80vh',
-    width:'30%',
+    height:'65vh',
     overflow:'scroll'
+  },
+  EmergencyListContainer: {
+    flex: '1',
+  },
+  EmergencyListHeader: {
+    borderBottom:'2px solid black',
+    padding:'2px'
   },
   EmergencyListItem: {
     backgroundColor:'#fafafa',
-    margin:'10px',
     padding:'3px 10px',
-    fontSize:'.85rem'
+    fontSize:'.85rem',
+    cursor:'pointer'
   }
 }
 
