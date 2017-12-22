@@ -6,7 +6,7 @@ class EmergencyList extends Component {
     constructor(props) {
       super(props);
     }
-  
+
     render() {
       console.log(this.props.markers);
       let emergencyListItems = this.props.emergencies.map((emergency, idx, emergencies) => {
@@ -19,7 +19,7 @@ class EmergencyList extends Component {
           </EmergencyListItem>
         )
       })
-      
+
       return(
         <div style={ style.EmergencyListContainer}>
           <div style={ style.EmergencyListHeader }>Latest { this.props.emergencies.length } Emergencies</div>

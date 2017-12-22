@@ -39,7 +39,7 @@ export default class Map extends React.Component {
     this.map = new google.maps.Map(map, options);
     this.map.mapTypes.set('styled_map', styledMapType);
     this.map.setMapTypeId('styled_map');
-    
+
     // this.markers = [];
 
     this.infowindow = new google.maps.InfoWindow({
@@ -117,18 +117,17 @@ export default class Map extends React.Component {
 
   render() {
     if(this.props.emergencies.length > 0){
-      console.log(this.props.emergencies);
+      // console.log(this.props.emergencies);
       this.createMarkers(this.props.emergencies);
     }
     return (
       <div style={ style.MapContainer }>
         <div id='map' ref='map' style={style.Map}/>
-        <EmergencyList 
-          emergencies={ this.props.emergencies } 
-          markers={ this.markers } 
+        <EmergencyList
+          emergencies={ this.props.emergencies }
+          markers={ this.markers }
           />
       </div>
     );
   }
 }
-

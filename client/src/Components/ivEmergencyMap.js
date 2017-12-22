@@ -1,14 +1,8 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-// import App from './Components/App';
-//
-// ReactDOM.render(<App />, document.getElementById('root'));
-
 //React
 import React from 'react';
 import ReactDOM from 'react-dom';
 //Components
-import Root from './Components/Root';
+import Root from './components/root';
 import configureStore from './Store/store';
 
 
@@ -21,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // } else {
     store = configureStore();
   // }
-  console.log(store.getState());
   const root = document.getElementById('root');
   ReactDOM.render(<Root store={store} />, root);
 });

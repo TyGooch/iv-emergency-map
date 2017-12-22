@@ -2,7 +2,7 @@
 'use strict'
 
 var express = require('express');
-const path = require('path');
+var path = require('path');
 var axios = require('axios');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
@@ -93,7 +93,7 @@ app.use(bodyParser.json());
 //   res.setHeader('Access-Control-Allow-Credentials', 'true');
 //   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
 //   res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
-// 
+//
 //   // remove cacheing
 //   res.setHeader('Cache-Control', 'no-cache');
 //   next();
@@ -107,7 +107,7 @@ app.use(bodyParser.json());
 //   res.json({ message: 'API Initialized!'});
 // });
 
-app.get('/api/emergencies/', function(req, res) {
+app.get('/api/emergencies', function(req, res) {
   //looks at our Emergency Schema
   Emergency.find(function(err, emergencies) {
     if (err)
@@ -116,6 +116,31 @@ app.get('/api/emergencies/', function(req, res) {
     res.json(emergencies)
   });
 })
+
+// app.get('/api/emergencies/:description/:startDate/:endDate/:limit', function(req, res) {
+//   //looks at our Emergency Schema
+//   var description = req.params.description;
+//   var startDate = req.params.startDate;
+//   var endDate = req.params.endDate;
+//   var limit = req.params.limit;
+//
+//   Emergency.
+//     find({ occupation: /host/ }).
+//     where('name.last').equals('Ghost').
+//     where('age').gt(17).lt(66).
+//     where('likes').in(['vaporizing', 'talking']).
+//     limit(10).
+//     sort('-occupation').
+//     select('name occupation').
+//     exec(callback);
+//
+//   Emergency.find(function(err, emergencies) {
+//     if (err)
+//       res.send(err);
+//     //responds with a json object of our database emergencies.
+//     res.json(emergencies)
+//   });
+// })
 
 app.post('/api/emergencies', function(req, res) {
   var emergency = new Emergency();
@@ -148,7 +173,7 @@ app.post('/api/emergencies', function(req, res) {
 //     emergency.position = req.body.position;
 //     emergency.description = req.body.description;
 //     emergency.time = req.body.time;
-// 
+//
 //     emergency.save(function(err) {
 //       if (err)
 //         res.send(err);
@@ -167,7 +192,7 @@ app.post('/api/emergencies', function(req, res) {
   //       res.json(emergencies)
   //     })
   //   })
-  // 
+  //
     app.get('/api/emergencies/latest', function(req, res) {
       var q = Emergency.find().sort({time: -1}).limit(10);
       q.exec(function(err, emergencies) {
@@ -186,7 +211,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(port, host, function() {
-  // getTweets();
+  getTweets();
   console.log(`api running on port ${port}`);
   console.log(`host running on ${host}`);
 });
