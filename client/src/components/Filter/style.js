@@ -9,12 +9,11 @@ const style = {
     width:'50px',
     height:'50px',
     margin:'5px',
-    background:'green'
+    cursor:'pointer'
   },
   LimitFilter: {
     height:'50px',
-    margin:'5px',
-    background:'green'
+    margin:'5px'
   }
 }
 

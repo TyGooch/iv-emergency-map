@@ -41,7 +41,7 @@ class FilterForm extends React.Component {
         defaultChecked={types[type]}
         checked={types[type]}
         onChange={ handleTypeToggle({types, type}, updateFilter)}/>
-        <label ref="text">{type}</label>
+        {type}
       </div>
     ))
 
