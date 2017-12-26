@@ -50,15 +50,15 @@ class FilterForm extends React.Component {
         <span className="filter">Filter results: </span>
         { typeFilters }
         <div style={style.LimitFilter}>
-          <label>Show at most </label>
+          Show at most
           <input
             type="number"
             value={this.props.limit}
             onChange={handleChange('limit', this.props.updateFilter)}
           />
-          <label> Emergencies </label>
+          Emergencies
         </div>
-        <label>Between </label>
+        Between
         <DatePicker
           selected={moment(this.props.timeBounds.earliest)}
           selectsStart
@@ -66,7 +66,7 @@ class FilterForm extends React.Component {
           endDate={moment(this.props.timeBounds.latest)}
           onChange={this.handleStartDateChange}
         />
-
+         and
         <DatePicker
           selected={moment(this.props.timeBounds.latest)}
           selectsEnd
