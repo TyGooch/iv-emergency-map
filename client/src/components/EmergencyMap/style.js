@@ -6,8 +6,7 @@ const style = {
     width:'100vw',
     height: '70vh',
     // maxHeight:'70vh',
-    display:'flex',
-    backgroundColor: 'black'
+    display:'flex'
   }
 }
 

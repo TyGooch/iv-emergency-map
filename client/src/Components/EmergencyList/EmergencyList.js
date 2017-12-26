@@ -9,10 +9,10 @@ class EmergencyList extends Component {
   
     render() {
       console.log(this.props.markers);
-      let emergencyListItems = this.props.emergencies.map((emergency, idx, emergencies) => {
+      let emergencyListItems = this.props.emergencies.reverse().map((emergency, idx, emergencies) => {
         return(
           <EmergencyListItem
-            marker={ this.props.markers[idx] }
+            marker={ this.props.markers.reverse()[idx] }
             description={ emergency.description }
             address={ emergency.address }
             time={ emergency.time }>

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {mapStyle} from './mapStyle.js';
-// import EmergencyList from '../EmergencyList/EmergencyList';
+import EmergencyList from '../EmergencyList/EmergencyList';
 import style from './style.js'
 
 const google = window.google;
@@ -10,22 +10,13 @@ export default class Map extends React.Component {
 
   constructor(props) {
     super(props);
-    // this.state = {
-    //     markers: []
-    // }
-    // this.loadEmergenciesFromServer = this.loadEmergenciesFromServer.bind(this);
-    // this.initializeState = this.initializeState.bind(this);
     this.createMarker = this.createMarker.bind(this);
     this.createMarkers = this.createMarkers.bind(this);
     this.getIconUrl = this.getIconUrl.bind(this);
     this.markers = [];
-    // this.parseTime = this.parseTime.bind(this);
   }
 
   componentDidMount() {
-    // this.axiosInstance = axios.create({
-    //   baseURL: process.env.BASE_URL
-    // });
     const map = ReactDOM.findDOMNode(this.refs.map)
 
     const options = {
@@ -40,13 +31,10 @@ export default class Map extends React.Component {
     this.map.mapTypes.set('styled_map', styledMapType);
     this.map.setMapTypeId('styled_map');
     
-    // this.markers = [];
-
     this.infowindow = new google.maps.InfoWindow({
       content: ''
     });
 
-    // this.initializeState();
 
     // close infowindow on click out
     var infowindow = this.infowindow;
@@ -54,13 +42,12 @@ export default class Map extends React.Component {
       infowindow.close();
     })
 
-    // setInterval(this.loadEmergenciesFromServer, 2000);
   }
 
   createMarkers(emergencies) {
-    if(this.markers.length >= 10){
-      this.markers.slice(-(emergencies.length)).forEach(marker => { marker.setMap(null)});
-    }
+    // if(this.markers.length >= 10){
+    //   this.markers.slice(-(emergencies.length)).forEach(marker => { marker.setMap(null)});
+    // }
     emergencies.forEach(this.createMarker);
   }
 
@@ -93,13 +80,14 @@ export default class Map extends React.Component {
       infowindow.open(this.map, this);
     });
 
-    if(this.markers.length <= 9){
-      this.markers = this.markers.concat([marker]);
-      // this.setState({markers: this.state.markers.concat([marker])});
-    } else {
-      this.markers = this.markers.slice(0,8).concat([marker]);
-      // this.setState({markers: this.state.markers.slice(0,8).concat([marker])});
-    }
+    this.markers.push(marker);
+    // if(this.markers.length <= 9){
+    //   this.markers = this.markers.concat([marker]);
+    //   // this.setState({markers: this.state.markers.concat([marker])});
+    // } else {
+    //   this.markers = this.markers.slice(0,8).concat([marker]);
+    //   // this.setState({markers: this.state.markers.slice(0,8).concat([marker])});
+    // }
   }
 
   getIconUrl(emergency) {
@@ -122,7 +110,11 @@ export default class Map extends React.Component {
     }
     return (
       <div style={ style.MapContainer }>
-        <div id='map' ref='map' style={style.Map}/>
+        <div id='map' ref='map' style={ style.Map }/>
+        <EmergencyList 
+          emergencies={ this.props.emergencies }
+          markers={ this.markers }
+        />
       </div>
     );
   }
