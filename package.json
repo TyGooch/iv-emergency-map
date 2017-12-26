@@ -17,13 +17,11 @@
     "@google/maps": "^0.4.5",
     "axios": "^0.17.1",
     "body-parser": "^1.18.2",
-    "bootstrap": "^3.3.7",
     "express": "^4.16.2",
     "foreman": "^2.0.0",
     "moment": "^2.20.1",
     "mongoose": "^4.13.6",
     "nodemon": "^1.12.1",
-    "react-datepicker": "^0.64.0",
     "twitter": "^1.7.1"
   },
   "keywords": [

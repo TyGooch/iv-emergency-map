@@ -6,14 +6,18 @@
     "@google/maps": "^0.4.5",
     "axios": "^0.17.1",
     "body-parser": "^1.18.2",
+    "bootstrap": "^3.3.7",
     "express": "^4.16.2",
     "foreman": "^2.0.0",
     "mongoose": "^4.13.6",
     "nodemon": "^1.12.1",
     "react": "^16.2.0",
+    "react-datepicker": "^0.64.0",
     "react-dom": "^16.2.0",
     "react-gmaps": "^1.7.0",
+    "react-redux": "^5.0.6",
     "react-scripts": "1.0.17",
+    "redux": "^3.7.2",
     "twitter": "^1.7.1"
   },
   "scripts": {
