@@ -2,6 +2,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
+import style from './style.js'
 import 'react-datepicker/dist/react-datepicker.css';
 
 
@@ -12,12 +13,12 @@ const handleChange = (filter, updateFilter) => e => (
 const handleTypeToggle = (filter, updateFilter) => e => {
   var types = filter.types;
   types[filter.type] = !types[filter.type];
-  
+
   return updateFilter(filter.types, types)
 }
 
 class FilterForm extends React.Component {
-  
+
   handleStartDateChange = date => {
     var timeBounds = this.props.timeBounds;
     timeBounds['earliest'] = date;
@@ -28,33 +29,35 @@ class FilterForm extends React.Component {
     timeBounds['latest'] = date;
     this.props.updateFilter(this.props.timeBounds, timeBounds)
   }
-  
+
   render() {
     var types = this.props.types;
     var updateFilter = this.props.updateFilter;
-    
+
     const typeFilters = Object.keys(types).map(type => (
-      <div>
-      <input type="checkbox"
-      className="toggle"
-      defaultChecked={types[type]}
-      onChange={ handleTypeToggle({types, type}, updateFilter)}/>
-      <label ref="text">{type}</label>
+      <div onClick={handleTypeToggle({types, type}, updateFilter)} style={style.TypeFilter}>
+        <input type="checkbox"
+        className="toggle"
+        defaultChecked={types[type]}
+        checked={types[type]}
+        onChange={ handleTypeToggle({types, type}, updateFilter)}/>
+        <label ref="text">{type}</label>
       </div>
     ))
-    
+
     return(
-      <div>
-        <span className="filter">Filter results:</span>
-        <br/>
+      <div style={style.FilterBarContainer}>
+        <span className="filter">Filter results: </span>
         { typeFilters }
-        <br/>
-        <label>Maximum Emergencies</label>
-        <input
-          type="number"
-          value={this.props.limit}
-          onChange={handleChange('limit', this.props.updateFilter)}
-        />
+        <div style={style.LimitFilter}>
+          <label>Show at most </label>
+          <input
+            type="number"
+            value={this.props.limit}
+            onChange={handleChange('limit', this.props.updateFilter)}
+          />
+          <label> Emergencies </label>
+        </div>
         <label>Between </label>
         <DatePicker
           selected={moment(this.props.timeBounds.earliest)}

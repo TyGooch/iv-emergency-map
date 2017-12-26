@@ -50,7 +50,10 @@ export default class Map extends React.Component {
     var filteredEmergencies = [];
     
     var allowedTypes = [];
-    Object.keys(filters.types).forEach( type => {filters.types[type] ? allowedTypes.push(type) : null});    
+    Object.keys(filters.types).forEach( type => {filters.types[type] ? allowedTypes.push(type) : null});
+    if(allowedTypes.length === 0){
+      return filteredEmergencies;
+    }
     var allowedTypesRegex = new RegExp(allowedTypes.join('|'));
     
     emergencies.forEach(emergency => {
