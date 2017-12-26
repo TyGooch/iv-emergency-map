@@ -1,11 +1,15 @@
 import React from 'react';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+
+import 'react-datepicker/dist/react-datepicker.css';
+
 
 const handleChange = (filter, updateFilter) => e => (
   updateFilter(filter, parseInt(e.currentTarget.value))
 );
 
 const handleTypeToggle = (filter, updateFilter) => e => {
-  // debugger;
   var types = filter.types;
   types[filter.type] = !types[filter.type];
   
@@ -13,6 +17,17 @@ const handleTypeToggle = (filter, updateFilter) => e => {
 }
 
 class FilterForm extends React.Component {
+  
+  handleStartDateChange = date => {
+    var timeBounds = this.props.timeBounds;
+    timeBounds['earliest'] = date;
+    this.props.updateFilter(this.props.timeBounds, timeBounds)
+  }
+  handleEndDateChange = date => {
+    var timeBounds = this.props.timeBounds;
+    timeBounds['latest'] = date;
+    this.props.updateFilter(this.props.timeBounds, timeBounds)
+  }
   
   render() {
     var types = this.props.types;
@@ -39,6 +54,22 @@ class FilterForm extends React.Component {
           type="number"
           value={this.props.limit}
           onChange={handleChange('limit', this.props.updateFilter)}
+        />
+        <label>Between </label>
+        <DatePicker
+          selected={moment(this.props.timeBounds.earliest)}
+          selectsStart
+          startDate={moment(this.props.timeBounds.earliest)}
+          endDate={moment(this.props.timeBounds.latest)}
+          onChange={this.handleStartDateChange}
+        />
+
+        <DatePicker
+          selected={moment(this.props.timeBounds.latest)}
+          selectsEnd
+          startDate={moment(this.props.timeBounds.earliest)}
+          endDate={moment(this.props.timeBounds.latest)}
+          onChange={this.handleEndDateChange}
         />
       </div>
     )
