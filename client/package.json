@@ -12,6 +12,7 @@
     "mongoose": "^4.13.6",
     "nodemon": "^1.12.1",
     "react": "^16.2.0",
+    "react-bootstrap": "^0.31.5",
     "react-datepicker": "^0.64.0",
     "react-dom": "^16.2.0",
     "react-gmaps": "^1.7.0",

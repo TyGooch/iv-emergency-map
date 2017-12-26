@@ -1,4 +1,5 @@
-import React from 'react'; 
+import React from 'react';
+import {PageHeader} from 'react-bootstrap';
 
 import EmergencyMapContainer from '../EmergencyMap/EmergencyMapContainer';
 import FilterContainer from '../Filter/FilterContainer';
@@ -13,11 +14,9 @@ class App extends React.Component {
   render() {
     return(
       <div>
-        <header>
-          Isla Vista Emergencies
-        </header>
-        <FilterContainer />
+        <PageHeader>Isla Vista Emergencies <small>Real time updates</small></PageHeader>
         <EmergencyMapContainer />
+        <FilterContainer />
       </div>
     )
   }
