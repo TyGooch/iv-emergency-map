@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 // import EmergencyMap from './EmergencyMap'
-import Map from './Components/Map/Map'
-import MapContainer from './Components/Map/MapContainer'
-import EmergencyList from './Components/EmergencyList/EmergencyList'
+import Map from './components/Map/Map'
+import MapContainer from './components/Map/MapContainer'
+import EmergencyList from './components/EmergencyList/EmergencyList'
 
 class App extends Component {
   render() {
