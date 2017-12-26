@@ -43,11 +43,63 @@ export default class Map extends React.Component {
     })
 
   }
+  
+  filterEmergencies() {
+    var emergencies = this.props.emergencies;
+    var filters = this.props.filters;
+    var filteredEmergencies = [];
+    
+    var allowedTypes = [];
+    Object.keys(filters.types).forEach( type => {filters.types[type] ? allowedTypes.push(type) : null});    
+    var allowedTypesRegex = new RegExp(allowedTypes.join('|'));
+    
+    emergencies.forEach(emergency => {
+      var match = emergency.description.match(allowedTypesRegex);
+      var date = new Date(emergency.time).getTime();
+      var withinTimeBounds = (filters.timeBounds.earliest <= date && date <= filters.timeBounds.latest) 
+      
+      if(match && withinTimeBounds){
+        filteredEmergencies.push(emergency);
+      } else if(allowedTypes.includes("Other") && withinTimeBounds)
+      {
+        var otherTypesRegex = new RegExp(Object.keys(filters.types).join('|'))
+        if(!emergency.description.match(otherTypesRegex)){
+          filteredEmergencies.push(emergency);
+        }
+      }
+    })
+    
+    return filteredEmergencies.slice(0, filters.limit);
+  }
+  
+  filterByType(emergencies, allowedTypes) {
+    var filteredEmergencies = [];
+    var allowedTypesRegex = new RegExp(allowedTypes.join('|'));
+    
+    emergencies.forEach(emergency => {
+      var match = emergency.description.match(allowedTypesRegex);
+      
+      if(allowedTypes.includes("Other")){
+      }
+      if(match){
+        filteredEmergencies.push(emergency);
+      } else if(allowedTypes.includes("Other"))
+      {
+        var otherTypesRegex = new RegExp(Object.keys(this.props.filters.types).join('|'))
+        if(!emergency.description.match(otherTypesRegex)){
+          filteredEmergencies.push(emergency);
+        }
+      }
+    })
+
+    return filteredEmergencies;
+  }
+  
+  filterByDate(emergencies, timeBounds){
+    
+  }
 
   createMarkers(emergencies) {
-    // if(this.markers.length >= 10){
-    //   this.markers.slice(-(emergencies.length)).forEach(marker => { marker.setMap(null)});
-    // }
     emergencies.forEach(this.createMarker);
   }
 
@@ -104,15 +156,15 @@ export default class Map extends React.Component {
   }
 
   render() {
-    if(this.props.emergencies.length > 0){
-      console.log(this.props.emergencies);
-      this.createMarkers(this.props.emergencies);
-    }
+    // this.filterEmergencies();
+    // if(this.props.emergencies.length > 0){
+      this.createMarkers(this.filterEmergencies(this.props.emergencies));
+    // }
     return (
       <div style={ style.MapContainer }>
         <div id='map' ref='map' style={ style.Map }/>
         <EmergencyList 
-          emergencies={ this.props.emergencies }
+          emergencies={ this.filterEmergencies(this.props.emergencies) }
           markers={ this.markers }
         />
       </div>

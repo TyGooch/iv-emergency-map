@@ -6,7 +6,8 @@ import EmergencyMap from './EmergencyMap';
 
 const mapStateToProps = state => ({
   // emergencies: state.emergencies
-  emergencies: Object.keys(state.emergencies).map(key => state.emergencies[key])
+  emergencies: Object.keys(state.emergencies).map(key => state.emergencies[key]),
+  filters: state.filters
 });
 
 // const mapDispatchToProps = dispatch => ({
