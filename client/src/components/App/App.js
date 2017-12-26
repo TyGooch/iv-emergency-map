@@ -1,6 +1,7 @@
 import React from 'react'; 
 
 import EmergencyMapContainer from '../EmergencyMap/EmergencyMapContainer';
+import FilterContainer from '../Filter/FilterContainer';
 
 class App extends React.Component {
   componentWillMount() {
@@ -15,6 +16,7 @@ class App extends React.Component {
         <header>
           Isla Vista Emergencies
         </header>
+        <FilterContainer />
         <EmergencyMapContainer />
       </div>
     )

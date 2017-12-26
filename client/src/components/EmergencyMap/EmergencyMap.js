@@ -68,8 +68,11 @@ export default class Map extends React.Component {
         }
       }
     })
+    if(filteredEmergencies.length > filters.limit){
+      filteredEmergencies = filteredEmergencies.slice(filteredEmergencies.length - filters.limit);
+    }
     
-    return filteredEmergencies.slice(filteredEmergencies.length - filters.limit);
+    return filteredEmergencies;
   }
   
   createMarkers(emergencies) {
@@ -137,7 +140,7 @@ export default class Map extends React.Component {
   }
 
   render() {
-    // this.clearMarkers();
+    this.clearMarkers();
     this.createMarkers(this.filterEmergencies());
     
     return (

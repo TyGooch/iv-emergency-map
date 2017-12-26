@@ -5,7 +5,7 @@ import { UPDATE_FILTER } from '../actions/filterActions';
 const defaultFilters = Object.freeze({
   // default to within last 24 hrs
   timeBounds: { earliest: new Date().setDate(new Date().getDate() - 1), latest: new Date().setDate(new Date().getDate() + 1) },
-  limit: 2,
+  limit: 25,
   types: { Medical: true, Vehicle: true, Fire: true, Other: true }
 });
 

@@ -1,8 +1,7 @@
 import { connect } from 'react-redux';
 
 import { updateFilter } from '../../actions/filterActions';
-import { asArray } from '../../reducers/selectors';
-import Search from './search';
+import FilterForm from './FilterForm';
 
 const mapStateToProps = state => ({
   timeBounds: state.filters.timeBounds,
@@ -17,4 +16,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Search);
+)(FilterForm);
