@@ -30,7 +30,7 @@ export default class Map extends React.Component {
     this.map = new google.maps.Map(map, options);
     this.map.mapTypes.set('styled_map', styledMapType);
     this.map.setMapTypeId('styled_map');
-    
+
     this.infowindow = new google.maps.InfoWindow({
       content: ''
     });
@@ -43,24 +43,24 @@ export default class Map extends React.Component {
     })
 
   }
-  
+
   filterEmergencies() {
     var emergencies = this.props.emergencies;
     var filters = this.props.filters;
     var filteredEmergencies = [];
-    
+
     var allowedTypes = [];
     Object.keys(filters.types).forEach( type => {filters.types[type] ? allowedTypes.push(type) : null});
     if(allowedTypes.length === 0){
       return filteredEmergencies;
     }
     var allowedTypesRegex = new RegExp(allowedTypes.join('|'));
-    
+
     emergencies.forEach(emergency => {
       var match = emergency.description.match(allowedTypesRegex);
       var date = new Date(emergency.time).getTime();
-      var withinTimeBounds = (filters.timeBounds.earliest <= date && date <= filters.timeBounds.latest) 
-      
+      var withinTimeBounds = (filters.timeBounds.earliest <= date && date <= filters.timeBounds.latest)
+
       if(match && withinTimeBounds){
         filteredEmergencies.push(emergency);
       } else if(allowedTypes.includes("Other") && withinTimeBounds)
@@ -74,14 +74,14 @@ export default class Map extends React.Component {
     if(filteredEmergencies.length > filters.limit){
       filteredEmergencies = filteredEmergencies.slice(filteredEmergencies.length - filters.limit);
     }
-    
+
     return filteredEmergencies;
   }
-  
+
   createMarkers(emergencies) {
     emergencies.forEach(this.createMarker);
   }
-  
+
   clearMarkers(){
     this.markers.forEach(marker => marker.setMap(null));
     this.markers = [];
@@ -91,10 +91,10 @@ export default class Map extends React.Component {
     const pos = new google.maps.LatLng(emergency.position.lat, emergency.position.lng);
     const iconUrl = this.getIconUrl(emergency);
     var icon = {
-      url: iconUrl, // url
-      scaledSize: new google.maps.Size(30, 30), // scaled size
-      origin: new google.maps.Point(0,0), // origin
-      anchor: new google.maps.Point(0, 0) // anchor
+      url: iconUrl,
+      scaledSize: new google.maps.Size(30, 30),
+      origin: new google.maps.Point(0,0),
+      anchor: new google.maps.Point(0, 0)
     };
     const marker = new google.maps.Marker({
       position: pos,
@@ -116,17 +116,12 @@ export default class Map extends React.Component {
       infowindow.open(this.map, this);
     });
 
-    // this.markers.push(marker);
     if(this.markers.length < this.props.filters.limit){
-      // this.markers = this.markers.concat([marker]);
       this.markers.push(marker);
-      // this.setState({markers: this.state.markers.concat([marker])});
     } else {
       this.markers.slice(0, this.props.filters.limit).forEach(marker => marker.setMap(null));
       this.markers = this.markers.slice(0, this.props.filters.limit - 2).concat([marker]);
-      // this.setState({markers: this.state.markers.slice(0,8).concat([marker])});
     }
-    // debugger;
   }
 
   getIconUrl(emergency) {
@@ -145,11 +140,11 @@ export default class Map extends React.Component {
   render() {
     this.clearMarkers();
     this.createMarkers(this.filterEmergencies());
-    
+
     return (
       <div style={ style.MapContainer }>
         <div id='map' ref='map' style={ style.Map }/>
-        <EmergencyList 
+        <EmergencyList
           emergencies={ this.filterEmergencies() }
           markers={ this.markers }
         />
@@ -157,4 +152,3 @@ export default class Map extends React.Component {
     );
   }
 }
-

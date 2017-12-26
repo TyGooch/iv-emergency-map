@@ -6,9 +6,8 @@ class EmergencyList extends Component {
     constructor(props) {
       super(props);
     }
-  
+
     render() {
-      // let emergencyListItems = this.props.emergencies.reverse().map((emergency, idx, emergencies) => {
       let markers = this.props.markers.reverse();
       let emergencyListItems = this.props.emergencies.reverse().map((emergency, idx, emergencies) => {
         return(
@@ -20,7 +19,7 @@ class EmergencyList extends Component {
           </EmergencyListItem>
         )
       })
-      
+
       return(
         <div style={ style.EmergencyListContainer}>
           <div style={ style.EmergencyListHeader }>Latest { this.props.emergencies.length } Emergencies</div>
