@@ -4,19 +4,12 @@ import style from './style.js'
 class EmergencyListItem extends Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   author: '',
-    //   text: ''
-    // };
     //binding all our functions to this class
     this.clickMarker = this.clickMarker.bind(this);
   }
   
   clickMarker(marker) {
-    // e.preventDefault();
-    // debugger;
     window.google.maps.event.trigger(marker, 'click');
-    // document.getElementById('gift-close').click()
   
   }
   

@@ -69,38 +69,16 @@ export default class Map extends React.Component {
       }
     })
     
-    return filteredEmergencies.slice(0, filters.limit);
+    return filteredEmergencies.slice(filteredEmergencies.length - filters.limit);
   }
   
-  filterByType(emergencies, allowedTypes) {
-    var filteredEmergencies = [];
-    var allowedTypesRegex = new RegExp(allowedTypes.join('|'));
-    
-    emergencies.forEach(emergency => {
-      var match = emergency.description.match(allowedTypesRegex);
-      
-      if(allowedTypes.includes("Other")){
-      }
-      if(match){
-        filteredEmergencies.push(emergency);
-      } else if(allowedTypes.includes("Other"))
-      {
-        var otherTypesRegex = new RegExp(Object.keys(this.props.filters.types).join('|'))
-        if(!emergency.description.match(otherTypesRegex)){
-          filteredEmergencies.push(emergency);
-        }
-      }
-    })
-
-    return filteredEmergencies;
-  }
-  
-  filterByDate(emergencies, timeBounds){
-    
-  }
-
   createMarkers(emergencies) {
     emergencies.forEach(this.createMarker);
+  }
+  
+  clearMarkers(){
+    this.markers.forEach(marker => marker.setMap(null));
+    this.markers = [];
   }
 
   createMarker(emergency) {
@@ -132,14 +110,17 @@ export default class Map extends React.Component {
       infowindow.open(this.map, this);
     });
 
-    this.markers.push(marker);
-    // if(this.markers.length <= 9){
-    //   this.markers = this.markers.concat([marker]);
-    //   // this.setState({markers: this.state.markers.concat([marker])});
-    // } else {
-    //   this.markers = this.markers.slice(0,8).concat([marker]);
-    //   // this.setState({markers: this.state.markers.slice(0,8).concat([marker])});
-    // }
+    // this.markers.push(marker);
+    if(this.markers.length < this.props.filters.limit){
+      // this.markers = this.markers.concat([marker]);
+      this.markers.push(marker);
+      // this.setState({markers: this.state.markers.concat([marker])});
+    } else {
+      this.markers.slice(0, this.props.filters.limit).forEach(marker => marker.setMap(null));
+      this.markers = this.markers.slice(0, this.props.filters.limit - 2).concat([marker]);
+      // this.setState({markers: this.state.markers.slice(0,8).concat([marker])});
+    }
+    // debugger;
   }
 
   getIconUrl(emergency) {
@@ -156,15 +137,14 @@ export default class Map extends React.Component {
   }
 
   render() {
-    // this.filterEmergencies();
-    // if(this.props.emergencies.length > 0){
-      this.createMarkers(this.filterEmergencies(this.props.emergencies));
-    // }
+    // this.clearMarkers();
+    this.createMarkers(this.filterEmergencies());
+    
     return (
       <div style={ style.MapContainer }>
         <div id='map' ref='map' style={ style.Map }/>
         <EmergencyList 
-          emergencies={ this.filterEmergencies(this.props.emergencies) }
+          emergencies={ this.filterEmergencies() }
           markers={ this.markers }
         />
       </div>

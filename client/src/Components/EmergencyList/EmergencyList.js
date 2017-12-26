@@ -8,10 +8,12 @@ class EmergencyList extends Component {
     }
   
     render() {
+      // let emergencyListItems = this.props.emergencies.reverse().map((emergency, idx, emergencies) => {
+      let markers = this.props.markers.reverse();
       let emergencyListItems = this.props.emergencies.reverse().map((emergency, idx, emergencies) => {
         return(
           <EmergencyListItem
-            marker={ this.props.markers.reverse()[idx] }
+            marker={ markers[idx] }
             description={ emergency.description }
             address={ emergency.address }
             time={ emergency.time }>
