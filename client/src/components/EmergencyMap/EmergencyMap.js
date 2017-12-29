@@ -59,7 +59,7 @@ export default class Map extends React.Component {
     emergencies.forEach(emergency => {
       var match = emergency.description.match(allowedTypesRegex);
       var date = new Date(emergency.time).getTime();
-      var withinTimeBounds = (filters.timeBounds.earliest <= date && date <= filters.timeBounds.latest)
+      var withinTimeBounds = (filters.timeBounds.startDate <= date && date <= filters.timeBounds.endDate)
 
       if(match && withinTimeBounds){
         filteredEmergencies.push(emergency);

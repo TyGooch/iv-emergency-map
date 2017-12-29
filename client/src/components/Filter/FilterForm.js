@@ -1,79 +1,78 @@
 import React from 'react';
-import DatePicker from 'react-datepicker';
+// import DatePicker from 'react-datepicker';
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
+import { DateRangePicker } from 'react-dates';
 import moment from 'moment';
+import DateRangeFilter from './DateRangeFilter';
+import {ButtonToolbar, ToggleButtonGroup, ToggleButton} from 'react-bootstrap';
+
 
 import style from './style.js'
-import 'react-datepicker/dist/react-datepicker.css';
 
-
-const handleChange = (filter, updateFilter) => e => (
-  updateFilter(filter, parseInt(e.currentTarget.value))
-);
-
-const handleTypeToggle = (filter, updateFilter) => e => {
-  var types = filter.types;
-  types[filter.type] = !types[filter.type];
-
-  return updateFilter(filter.types, types)
-}
 
 class FilterForm extends React.Component {
 
-  handleStartDateChange = date => {
-    var timeBounds = this.props.timeBounds;
-    timeBounds['earliest'] = date;
-    this.props.updateFilter(this.props.timeBounds, timeBounds)
+  handleLimitChange(event){
+    this.props.updateFilter('limit', event.target.value)
+  };
+
+  handleDateChange(startDate, endDate) {
+
   }
-  handleEndDateChange = date => {
-    var timeBounds = this.props.timeBounds;
-    timeBounds['latest'] = date;
-    this.props.updateFilter(this.props.timeBounds, timeBounds)
+  //
+  // handleStartDateChange(date){
+  //   var timeBounds = this.props.timeBounds;
+  //   timeBounds['earliest'] = date;
+  //   this.props.updateFilter(this.props.timeBounds, timeBounds)
+  // }
+  // handleEndDateChange(date){
+  //   var timeBounds = this.props.timeBounds;
+  //   timeBounds['latest'] = date;
+  //   this.props.updateFilter(this.props.timeBounds, timeBounds)
+  // }
+
+  handleTypeClick(activeTypes){
+    var newTypes = {}
+    Object.keys(this.props.types).map(type =>
+      {
+        if(activeTypes.includes(type)){
+          newTypes[type] = true;
+        }
+        else{
+          newTypes[type] = false
+        }
+      });
+    this.props.updateFilter('types', newTypes)
   }
 
   render() {
-    var types = this.props.types;
-    var updateFilter = this.props.updateFilter;
-
-    const typeFilters = Object.keys(types).map(type => (
-      <div onClick={handleTypeToggle({types, type}, updateFilter)} style={style.TypeFilter}>
-        <input type="checkbox"
-        className="toggle"
-        defaultChecked={types[type]}
-        checked={types[type]}
-        onChange={ handleTypeToggle({types, type}, updateFilter)}/>
-        {type}
-      </div>
-    ))
-
     return(
       <div style={style.FilterBarContainer}>
         <span className="filter">Filter results: </span>
-        { typeFilters }
+        <ButtonToolbar>
+              <ToggleButtonGroup type="checkbox" defaultValue={Object.keys(this.props.types)} onChange={this.handleTypeClick.bind(this)}>
+                <ToggleButton data-key='Medical' value={'Medical'} >Medical</ToggleButton>
+                <ToggleButton data-key='Fire' value={'Fire'}>Fire</ToggleButton>
+                <ToggleButton data-key='Vehicle' value={'Vehicle'}>Vehicle</ToggleButton>
+                <ToggleButton data-key='Other' value={'Other'}>Other</ToggleButton>
+              </ToggleButtonGroup>
+        </ButtonToolbar>
         <div style={style.LimitFilter}>
           Show at most
           <input
             type="number"
+            min="1"
+            pattern="[0-9]*"
             value={this.props.limit}
-            onChange={handleChange('limit', this.props.updateFilter)}
+            onChange={this.handleLimitChange.bind(this)}
           />
           Emergencies
         </div>
         Between
-        <DatePicker
-          selected={moment(this.props.timeBounds.earliest)}
-          selectsStart
-          startDate={moment(this.props.timeBounds.earliest)}
-          endDate={moment(this.props.timeBounds.latest)}
-          onChange={this.handleStartDateChange}
-        />
-         and
-        <DatePicker
-          selected={moment(this.props.timeBounds.latest)}
-          selectsEnd
-          startDate={moment(this.props.timeBounds.earliest)}
-          endDate={moment(this.props.timeBounds.latest)}
-          onChange={this.handleEndDateChange}
-        />
+
+        <DateRangeFilter startDate={this.props.timeBounds.startDate} endDate={this.props.timeBounds.endDate} updateFilter={this.props.updateFilter}/>
+
       </div>
     )
   }
