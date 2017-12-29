@@ -18,7 +18,8 @@ export default class FilterCalendar extends React.Component {
     return {
       from: this.props.startDate,
       to: this.props.endDate,
-      enteredTo: this.props.endDate, // Keep track of the last day for mouseEnter.
+      enteredTo: this.props.endDate,
+      readOnly: this.props.readOnly
     };
   }
 
@@ -31,7 +32,7 @@ export default class FilterCalendar extends React.Component {
   handleDayClick(day) {
     const { from, to } = this.state;
     if (from && to && day >= from && day <= to) {
-      this.handleResetClick();
+      this.softReset();
       this.setState({
         from: day,
         to: null,
@@ -64,29 +65,26 @@ export default class FilterCalendar extends React.Component {
   }
 
   handleResetClick() {
+    this.props.updateFilter('timeBounds', {startDate: null, endDate: null})
+  }
+  softReset() {
     this.setState({
       from: null,
       to: null,
-      enteredTo: null
+      enteredTo: null,
+      readOnly: false
     });
   }
 
   componentDidUpdate(prevProps, prevState) {
-  console.log('');
-  console.log('UPDATE');
-  console.log(prevProps);
-  console.log(this.props);
-  console.log(prevState);
-  console.log(this.state);
-  console.log('');
-
-  if(this.props !== prevProps){
-    this.setState({
-      from: this.props.startDate,
-      to: this.props.endDate,
-      enteredTo: this.props.endDate
-    })
-  }
+    if(this.props !== prevProps){
+      this.setState({
+        from: this.props.startDate,
+        to: this.props.endDate,
+        enteredTo: this.props.endDate,
+        readOnly: this.props.readOnly
+      })
+    }
 }
 
   render() {
@@ -97,48 +95,85 @@ export default class FilterCalendar extends React.Component {
     // const to = this.props.endDate;
     // const enteredTo = this.props.endDate;
     const modifiers = { start: from, end: enteredTo };
-    const disabledDays = { after: new Date() };
     const selectedDays = [from, { from, to: enteredTo }];
-    return (
-      <div>
-        <DayPicker
-          className="Range"
-          numberOfMonths={2}
-          selectedDays={selectedDays}
-          disabledDays={disabledDays}
-          modifiers={modifiers}
-          onDayClick={this.handleDayClick}
-          onDayMouseEnter={this.handleDayMouseEnter}
-        />
+    if(this.props.readOnly){
+      const disabledDays = { before: from, after: to };
+      return (
         <div>
-          {!from && !to && 'Please select the first day.'}
-          {from && !to && 'Please select the last day.'}
-          {from &&
-            to &&
-            `Selected from ${from.toLocaleDateString()} to
-                ${to.toLocaleDateString()}`}{' '}
+          <div>
+            {from &&
+              to &&
+              `Showing from ${from.toLocaleDateString()} to
+              ${to.toLocaleDateString()}`}{' '}
+          </div>
+            <DayPicker
+            className="Range"
+            numberOfMonths={2}
+            selectedDays={selectedDays}
+            disabledDays={disabledDays}
+            modifiers={modifiers}
+            />
+
+            <Helmet>
+            <style>{`
+              .Range .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
+                background-color: #f0f8ff !important;
+                color: #4a90e2;
+              }
+              .Range .DayPicker-Day {
+                border-radius: 0 !important;
+              }
+              .DayPicker-Day--today.DayPicker-Day--selected {
+
+              }
+              `}</style>
+              </Helmet>
+              </div>
+            );
+    } else{
+      const disabledDays = { after: new Date() };
+      return(
+        <div>
+        <div>
+        {!from && !to && 'Please select the first day.'}
+        {from && !to && 'Please select the last day.'}
+        {from &&
+          to &&
+          `Selected from ${from.toLocaleDateString()} to
+          ${to.toLocaleDateString()}`}{' '}
           {from &&
             to && (
               <button className="link" onClick={this.handleResetClick}>
-                Reset
+              Reset
               </button>
             )}
-        </div>
-        <Helmet>
-          <style>{`
-  .Range .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
-    background-color: #f0f8ff !important;
-    color: #4a90e2;
-  }
-  .Range .DayPicker-Day {
-    border-radius: 0 !important;
-  }
-  .DayPicker-Day--today.DayPicker-Day--selected {
+            </div>
+            <DayPicker
+            className="Range"
+            numberOfMonths={2}
+            selectedDays={selectedDays}
+            disabledDays={disabledDays}
+            modifiers={modifiers}
+            onDayClick={this.handleDayClick}
+            onDayMouseEnter={this.handleDayMouseEnter}
+            />
 
-  }
-`}</style>
-        </Helmet>
-      </div>
-    );
+            <Helmet>
+            <style>{`
+              .Range .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
+                background-color: #f0f8ff !important;
+                color: #4a90e2;
+              }
+              .Range .DayPicker-Day {
+                border-radius: 0 !important;
+              }
+              .DayPicker-Day--today.DayPicker-Day--selected {
+
+              }
+              `}</style>
+              </Helmet>
+              </div>
+      )
+    }
   }
 }

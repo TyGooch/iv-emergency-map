@@ -13,16 +13,32 @@ import style from './style.js'
 
 class FilterForm extends React.Component {
 
+  constructor(props){
+    super(props);
+    this.state={
+      readOnlyCalendar: true
+    }
+  }
+
   handleLimitChange(event){
     this.props.updateFilter('limit', event.target.value)
   };
 
-  handleDateChange(dayInterval) {
-    this.props.updateFilter('timeBounds', {startDate: new Date(Date.now() - (dayInterval*24*60*60*1000)), endDate: new Date()})
+  handleDateToggle(dayInterval) {
+    if(dayInterval === 'custom'){
+      var startDate = '';
+      var endDate = '';
+      this.setState({readOnlyCalendar: false});
+    } else{
+      startDate = new Date(Date.now() - (dayInterval*24*60*60*1000));
+      endDate = new Date()
+      this.setState({readOnlyCalendar: true});
+    }
+    this.props.updateFilter('timeBounds', {startDate: startDate, endDate: endDate})
   }
 
 
-  handleTypeClick(activeTypes){
+  handleTypeToggle(activeTypes){
     var newTypes = {}
     Object.keys(this.props.types).map(type =>
       {
@@ -43,7 +59,7 @@ class FilterForm extends React.Component {
         <Tabs id="filterNav">
           <Tab eventKey={1} title="Emergency Type">
             <ButtonToolbar>
-                  <ToggleButtonGroup type="checkbox" defaultValue={Object.keys(this.props.types)} onChange={this.handleTypeClick.bind(this)}>
+                  <ToggleButtonGroup type="checkbox" defaultValue={Object.keys(this.props.types)} onChange={this.handleTypeToggle.bind(this)}>
                     <ToggleButton data-key='Medical' value={'Medical'} >Medical</ToggleButton>
                     <ToggleButton data-key='Fire' value={'Fire'}>Fire</ToggleButton>
                     <ToggleButton data-key='Vehicle' value={'Vehicle'}>Vehicle</ToggleButton>
@@ -66,7 +82,7 @@ class FilterForm extends React.Component {
           </Tab>
           <Tab eventKey={3} title="Date">
           <ButtonToolbar>
-            <ToggleButtonGroup type="radio" name="timeOptions" defaultValue={'yesterday'} onChange={this.handleDateChange.bind(this)}>
+            <ToggleButtonGroup type="radio" name="timeOptions" defaultValue={'7'} onChange={this.handleDateToggle.bind(this)}>
               <ToggleButton value={'1'}>Yesterday</ToggleButton>
               <ToggleButton value={'7'}>1 Week Ago</ToggleButton>
               <ToggleButton value={'31'}>1 Month Ago</ToggleButton>
@@ -74,7 +90,7 @@ class FilterForm extends React.Component {
             </ToggleButtonGroup>
           </ButtonToolbar>
 
-          <FilterCalendar startDate={this.props.timeBounds.startDate} endDate={this.props.timeBounds.endDate} updateFilter={this.props.updateFilter}/>
+          <FilterCalendar startDate={this.props.timeBounds.startDate} endDate={this.props.timeBounds.endDate} updateFilter={this.props.updateFilter} readOnly={this.state.readOnlyCalendar} />
 
           </Tab>
         </Tabs>
