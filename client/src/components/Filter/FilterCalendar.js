@@ -5,7 +5,7 @@ import Helmet from 'react-helmet';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 
-export default class Example extends React.Component {
+export default class FilterCalendar extends React.Component {
   constructor(props) {
     super(props);
     this.handleDayClick = this.handleDayClick.bind(this);
@@ -17,8 +17,8 @@ export default class Example extends React.Component {
   getInitialState() {
     return {
       from: this.props.startDate,
-      to: new Date(),
-      enteredTo: new Date(), // Keep track of the last day for mouseEnter.
+      to: this.props.endDate,
+      enteredTo: this.props.endDate, // Keep track of the last day for mouseEnter.
     };
   }
 
@@ -67,17 +67,35 @@ export default class Example extends React.Component {
     this.setState({
       from: null,
       to: null,
-      enteredTo: null, // Keep track of the last day for mouseEnter.
+      enteredTo: null
     });
   }
 
-  componentDidMount(){
-    this.handleResetClick();
-    this.setState(this.getInitialState());
+  componentDidUpdate(prevProps, prevState) {
+  console.log('');
+  console.log('UPDATE');
+  console.log(prevProps);
+  console.log(this.props);
+  console.log(prevState);
+  console.log(this.state);
+  console.log('');
+
+  if(this.props !== prevProps){
+    this.setState({
+      from: this.props.startDate,
+      to: this.props.endDate,
+      enteredTo: this.props.endDate
+    })
   }
+}
 
   render() {
     const { from, to, enteredTo } = this.state;
+    const { startDate, endDate } = this.props;
+    // debugger;
+    // const from = this.props.startDate;
+    // const to = this.props.endDate;
+    // const enteredTo = this.props.endDate;
     const modifiers = { start: from, end: enteredTo };
     const disabledDays = { after: new Date() };
     const selectedDays = [from, { from, to: enteredTo }];

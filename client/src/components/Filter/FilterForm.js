@@ -4,8 +4,8 @@ import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker } from 'react-dates';
 import moment from 'moment';
-import DateRangeFilter from './DateRangeFilter';
-import {ButtonToolbar, ToggleButtonGroup, ToggleButton} from 'react-bootstrap';
+import FilterCalendar from './FilterCalendar';
+import {Tabs, Tab, ButtonToolbar, ToggleButtonGroup, ToggleButton} from 'react-bootstrap';
 
 
 import style from './style.js'
@@ -17,20 +17,10 @@ class FilterForm extends React.Component {
     this.props.updateFilter('limit', event.target.value)
   };
 
-  handleDateChange(startDate, endDate) {
-
+  handleDateChange(dayInterval) {
+    this.props.updateFilter('timeBounds', {startDate: new Date(Date.now() - (dayInterval*24*60*60*1000)), endDate: new Date()})
   }
-  //
-  // handleStartDateChange(date){
-  //   var timeBounds = this.props.timeBounds;
-  //   timeBounds['earliest'] = date;
-  //   this.props.updateFilter(this.props.timeBounds, timeBounds)
-  // }
-  // handleEndDateChange(date){
-  //   var timeBounds = this.props.timeBounds;
-  //   timeBounds['latest'] = date;
-  //   this.props.updateFilter(this.props.timeBounds, timeBounds)
-  // }
+
 
   handleTypeClick(activeTypes){
     var newTypes = {}
@@ -50,29 +40,44 @@ class FilterForm extends React.Component {
     return(
       <div style={style.FilterBarContainer}>
         <span className="filter">Filter results: </span>
-        <ButtonToolbar>
-              <ToggleButtonGroup type="checkbox" defaultValue={Object.keys(this.props.types)} onChange={this.handleTypeClick.bind(this)}>
-                <ToggleButton data-key='Medical' value={'Medical'} >Medical</ToggleButton>
-                <ToggleButton data-key='Fire' value={'Fire'}>Fire</ToggleButton>
-                <ToggleButton data-key='Vehicle' value={'Vehicle'}>Vehicle</ToggleButton>
-                <ToggleButton data-key='Other' value={'Other'}>Other</ToggleButton>
-              </ToggleButtonGroup>
-        </ButtonToolbar>
-        <div style={style.LimitFilter}>
-          Show at most
-          <input
-            type="number"
-            min="1"
-            pattern="[0-9]*"
-            value={this.props.limit}
-            onChange={this.handleLimitChange.bind(this)}
-          />
-          Emergencies
-        </div>
-        Between
+        <Tabs id="filterNav">
+          <Tab eventKey={1} title="Emergency Type">
+            <ButtonToolbar>
+                  <ToggleButtonGroup type="checkbox" defaultValue={Object.keys(this.props.types)} onChange={this.handleTypeClick.bind(this)}>
+                    <ToggleButton data-key='Medical' value={'Medical'} >Medical</ToggleButton>
+                    <ToggleButton data-key='Fire' value={'Fire'}>Fire</ToggleButton>
+                    <ToggleButton data-key='Vehicle' value={'Vehicle'}>Vehicle</ToggleButton>
+                    <ToggleButton data-key='Other' value={'Other'}>Other</ToggleButton>
+                  </ToggleButtonGroup>
+            </ButtonToolbar>
+          </Tab>
+          <Tab eventKey={2} title="Count">
+            <div style={style.LimitFilter}>
+              Show at most
+              <input
+                type="number"
+                min="1"
+                pattern="[0-9]*"
+                value={this.props.limit}
+                onChange={this.handleLimitChange.bind(this)}
+              />
+              Emergencies
+            </div>
+          </Tab>
+          <Tab eventKey={3} title="Date">
+          <ButtonToolbar>
+            <ToggleButtonGroup type="radio" name="timeOptions" defaultValue={'yesterday'} onChange={this.handleDateChange.bind(this)}>
+              <ToggleButton value={'1'}>Yesterday</ToggleButton>
+              <ToggleButton value={'7'}>1 Week Ago</ToggleButton>
+              <ToggleButton value={'31'}>1 Month Ago</ToggleButton>
+              <ToggleButton value={'custom'}>Custom Range</ToggleButton>
+            </ToggleButtonGroup>
+          </ButtonToolbar>
 
-        <DateRangeFilter startDate={this.props.timeBounds.startDate} endDate={this.props.timeBounds.endDate} updateFilter={this.props.updateFilter}/>
+          <FilterCalendar startDate={this.props.timeBounds.startDate} endDate={this.props.timeBounds.endDate} updateFilter={this.props.updateFilter}/>
 
+          </Tab>
+        </Tabs>
       </div>
     )
   }
