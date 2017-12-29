@@ -7,6 +7,10 @@ class EmergencyListItem extends Component {
     this.clickMarker = this.clickMarker.bind(this);
   }
 
+  componentDidMount(){
+    this.props.marker.addListener('click', () => this.props.selectEmergency(this.props.id))
+  }
+
   clickMarker(marker) {
     window.google.maps.event.trigger(marker, 'click');
   }
@@ -29,7 +33,8 @@ class EmergencyListItem extends Component {
     time = time.slice(0, -15);
 
     return(
-      <div className={this.props.isSelected ? "emergency-list-item-selected" : "emergency-list-item"}
+      <div
+        className={this.props.isSelected ? "emergency-list-item-selected" : "emergency-list-item"}
         onClick={ () => {
           this.clickMarker(this.props.marker);
           this.props.selectEmergency(this.props.id);

@@ -15,6 +15,7 @@ export default class Map extends React.Component {
     this.createMarkers = this.createMarkers.bind(this);
     this.getIconUrl = this.getIconUrl.bind(this);
     this.markers = [];
+    this.map = null;
   }
 
   componentDidMount() {
@@ -141,12 +142,14 @@ export default class Map extends React.Component {
 
   render() {
     this.clearMarkers();
-    this.createMarkers(this.filterEmergencies());
+    this.createMarkers(this.filterEmergencies());;
+    // debugger;
 
     return (
       <div className='map-container' >
         <div id='map' ref='map'/>
         <EmergencyList
+          map={ this.map }
           emergencies={ this.filterEmergencies().reverse() }
           markers={ this.markers.reverse() }
         />

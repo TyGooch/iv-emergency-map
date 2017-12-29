@@ -30,10 +30,13 @@
   padding-right: 3px;
 }
 
-.emergency-list :hover{
-  /* opacity: 0.85; */
+/* .emergency-list :hover{
   background-color: rgb(215,65,55);
+} */
+.emergency-list :hover .emergency-list span{
+  background-color: white;
 }
+
 
 .emergency-list :hover .emergency-list-item-image-container{
   border-radius: 50%;
@@ -80,6 +83,7 @@
 }
 
 .emergency-list-item-selected span{
+  /* background-color: rgb(24, 160, 94); */
   flex: 0 0 auto;
   /* padding-left: 30px; */
   font-weight: bold;

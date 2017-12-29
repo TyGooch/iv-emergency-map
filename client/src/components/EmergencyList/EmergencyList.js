@@ -12,25 +12,39 @@ class EmergencyList extends Component {
 
     }
 
+    componentDidUpdate() {
+      // debugger;
+      this.props.map.addListener('click', this.deselectEmergency.bind(this))
+      if(this.state.selectedEmergencyId){
+        this.refs.selected.scrollIntoView({block: 'center', behavior: 'smooth'});
+      }
+    }
+
     selectEmergency(emergencyId){
       // debugger;
       this.setState({selectedEmergencyId: emergencyId})
+    }
+
+    deselectEmergency(){
+      this.setState({selectedEmergencyId: null})
     }
 
     render() {
       let markers = this.props.markers;
       let emergencyListItems = this.props.emergencies.map((emergency, idx, emergencies) => {
         return(
-          <EmergencyListItem
-            key={emergency._id}
-            id={emergency._id}
-            marker={ markers[idx] }
-            description={ emergency.description }
-            address={ emergency.address }
-            time={ emergency.time }
-            selectEmergency={this.selectEmergency.bind(this)}
-            isSelected={this.state.selectedEmergencyId === emergency._id}>
-          </EmergencyListItem>
+          <div ref={this.state.selectedEmergencyId === emergency._id ? "selected" : null} >
+            <EmergencyListItem
+              key={emergency._id}
+              id={emergency._id}
+              marker={ markers[idx] }
+              description={ emergency.description }
+              address={ emergency.address }
+              time={ emergency.time }
+              selectEmergency={this.selectEmergency.bind(this)}
+              isSelected={this.state.selectedEmergencyId === emergency._id}>
+            </EmergencyListItem>
+          </div>
         )
       })
 
