@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {mapStyle} from './mapStyle.js';
 import EmergencyList from '../EmergencyList/EmergencyList';
-import style from './style.js'
+import style from './style.js';
+import './emergencyMap.css';
 
 const google = window.google;
 
@@ -20,7 +21,7 @@ export default class Map extends React.Component {
     const map = ReactDOM.findDOMNode(this.refs.map)
 
     const options = {
-      center: { lat: 34.4110, lng: -119.8610 },
+      center: { lat: 34.4116, lng: -119.8610 },
       zoom: 15,
       disableDefaultUI: true,
       zoomControl: true
@@ -97,6 +98,7 @@ export default class Map extends React.Component {
       anchor: new google.maps.Point(0, 0)
     };
     const marker = new google.maps.Marker({
+      id: emergency._id,
       position: pos,
       map: this.map,
       icon: icon
@@ -142,11 +144,11 @@ export default class Map extends React.Component {
     this.createMarkers(this.filterEmergencies());
 
     return (
-      <div style={ style.MapContainer }>
-        <div id='map' ref='map' style={ style.Map }/>
+      <div className='map-container' >
+        <div id='map' ref='map'/>
         <EmergencyList
-          emergencies={ this.filterEmergencies() }
-          markers={ this.markers }
+          emergencies={ this.filterEmergencies().reverse() }
+          markers={ this.markers.reverse() }
         />
       </div>
     );

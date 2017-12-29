@@ -9,7 +9,7 @@ import {Tabs, Tab, ButtonToolbar, ToggleButtonGroup, ToggleButton} from 'react-b
 
 
 import style from './style.js'
-
+import './filter.css';
 
 class FilterForm extends React.Component {
 
@@ -56,7 +56,7 @@ class FilterForm extends React.Component {
     return(
       <div style={style.FilterBarContainer}>
         <span className="filter">Filter results: </span>
-        <Tabs id="filterNav">
+        <Tabs justified id="filterNav">
           <Tab eventKey={1} title="Emergency Type">
             <ButtonToolbar>
                   <ToggleButtonGroup type="checkbox" defaultValue={Object.keys(this.props.types)} onChange={this.handleTypeToggle.bind(this)}>

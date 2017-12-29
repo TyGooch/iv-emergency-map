@@ -1,29 +1,43 @@
 import React, { Component } from 'react';
 import EmergencyListItem from './EmergencyListItem';
 import style from './style.js'
+import './emergencyList.css'
 
 class EmergencyList extends Component {
     constructor(props) {
       super(props);
+      this.state={
+        selectedEmergencyId: null
+      }
+
+    }
+
+    selectEmergency(emergencyId){
+      // debugger;
+      this.setState({selectedEmergencyId: emergencyId})
     }
 
     render() {
-      let markers = this.props.markers.reverse();
-      let emergencyListItems = this.props.emergencies.reverse().map((emergency, idx, emergencies) => {
+      let markers = this.props.markers;
+      let emergencyListItems = this.props.emergencies.map((emergency, idx, emergencies) => {
         return(
           <EmergencyListItem
+            key={emergency._id}
+            id={emergency._id}
             marker={ markers[idx] }
             description={ emergency.description }
             address={ emergency.address }
-            time={ emergency.time }>
+            time={ emergency.time }
+            selectEmergency={this.selectEmergency.bind(this)}
+            isSelected={this.state.selectedEmergencyId === emergency._id}>
           </EmergencyListItem>
         )
       })
 
       return(
-        <div style={ style.EmergencyListContainer}>
-          <div style={ style.EmergencyListHeader }>Latest { this.props.emergencies.length } Emergencies</div>
-          <div className="EmergencyList" style={ style.EmergencyList }>
+        <div className='emergency-list-container'>
+          <div className='emergency-list-header'>Latest { this.props.emergencies.length } Emergencies</div>
+          <div className='emergency-list'>
             { emergencyListItems }
           </div>
         </div>
