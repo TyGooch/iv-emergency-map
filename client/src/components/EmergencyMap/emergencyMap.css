@@ -1,3 +1,17 @@
+.live-update-banner-enabled {
+  background-color: rgb(91,184,92);
+  color: white;
+  padding: 3px;
+  text-align: center;
+}
+
+.live-update-banner-disabled {
+  background-color: rgb(240,174,78);
+  color: white;
+  padding: 3px;
+  text-align: center;
+}
+
 .map-container{
   width:100vw;
   height:55vh;

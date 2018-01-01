@@ -51,7 +51,13 @@ export default class FilterCalendar extends React.Component {
         to: day,
         enteredTo: day,
       });
+      day.setHours(23);
+      day.setMinutes(59);
+      day.setSeconds(59);
       this.props.updateFilter('timeBounds', {startDate: from, endDate:day});
+      if(this.props.liveUpdate && new Date().toString().slice(0,15) !== day.toString().slice(0,15)){
+        this.props.toggleLiveUpdates();
+      }
     }
   }
 
@@ -66,6 +72,7 @@ export default class FilterCalendar extends React.Component {
 
   handleResetClick() {
     this.props.updateFilter('timeBounds', {startDate: null, endDate: null})
+
   }
   softReset() {
     this.setState({
@@ -108,6 +115,7 @@ export default class FilterCalendar extends React.Component {
           </div>
             <DayPicker
             className="Range"
+            toMonth={new Date()}
             numberOfMonths={2}
             selectedDays={selectedDays}
             disabledDays={disabledDays}

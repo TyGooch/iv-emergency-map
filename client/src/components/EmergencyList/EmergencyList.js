@@ -15,10 +15,10 @@ class EmergencyList extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-      if(this.props.emergencies.length > 0 && this.props.emergencies[0]._id !== nextProps.emergencies[0]._id){
+      if( this.props.liveUpdate && this.props.emergencies.length > 0 &&  nextProps.emergencies.length > 0 && this.props.emergencies[0]._id !== nextProps.emergencies[0]._id){
         let newState = this.state;
         let i = 0;
-        while(nextProps.emergencies[i]._id !== this.props.emergencies[0]._id){
+        while( i < nextProps.emergencies.length && nextProps.emergencies[i]._id !== this.props.emergencies[0]._id){
           newState.newEmergencyIds = newState.newEmergencyIds.concat(nextProps.emergencies[i]._id);
           i += 1;
         }

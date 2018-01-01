@@ -145,13 +145,18 @@ export default class Map extends React.Component {
     this.createMarkers(this.filterEmergencies());;
 
     return (
-      <div className='map-container' >
-        <div id='map' ref='map'/>
-        <EmergencyList
-          map={ this.map }
-          emergencies={ this.filterEmergencies().reverse() }
-          markers={ this.markers.reverse() }
-        />
+      <div>
+        <div className={this.props.filters.liveUpdate ? 'live-update-banner-enabled' : 'live-update-banner-disabled'}>
+          Live Updates {this.props.filters.liveUpdate ? 'Enabled' : 'Disabled'}
+        </div>
+        <div className='map-container' >
+          <div id='map' ref='map'/>
+          <EmergencyList
+            map={ this.map }
+            emergencies={ this.filterEmergencies().reverse() }
+            markers={ this.markers.reverse() }
+          />
+        </div>
       </div>
     );
   }

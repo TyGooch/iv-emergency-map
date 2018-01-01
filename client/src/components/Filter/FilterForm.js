@@ -5,7 +5,7 @@ import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker } from 'react-dates';
 import moment from 'moment';
 import FilterCalendar from './FilterCalendar';
-import {Tabs, Tab, ButtonToolbar, ToggleButtonGroup, ToggleButton} from 'react-bootstrap';
+import {Tabs, Tab, ButtonToolbar, ToggleButtonGroup, ToggleButton, Button} from 'react-bootstrap';
 
 
 import style from './style.js'
@@ -16,9 +16,15 @@ class FilterForm extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      readOnlyCalendar: true
+      readOnlyCalendar: true,
+      activeButton: false
     }
   }
+
+  handleLiveUpdateToggle(event){
+    this.props.toggleLiveUpdates()
+    this.setState({activeButton: !this.state.activeButton})
+  };
 
   handleLimitChange(event){
     this.props.updateFilter('limit', event.target.value)
@@ -26,13 +32,17 @@ class FilterForm extends React.Component {
 
   handleDateToggle(dayInterval) {
     if(dayInterval === 'custom'){
-      var startDate = '';
-      var endDate = '';
+      var startDate = null;
+      var endDate = null;
       this.setState({readOnlyCalendar: false});
+      this.props.toggleLiveUpdates();
     } else{
       startDate = new Date(Date.now() - (dayInterval*24*60*60*1000));
       endDate = new Date()
       this.setState({readOnlyCalendar: true});
+      if(!this.props.liveUpdate){
+        this.props.toggleLiveUpdates();
+      }
     }
     this.props.updateFilter('timeBounds', {startDate: startDate, endDate: endDate})
   }
@@ -56,6 +66,13 @@ class FilterForm extends React.Component {
     return(
       <div className='filter-container' >
         <span className="filter-header">Filter Controls</span>
+        <Button
+          bsStyle={this.props.liveUpdate ? 'success' : 'default'}
+          disabled={this.props.timeBounds.endDate === null || this.props.timeBounds.endDate.toString().slice(0,15) !== new Date().toString().slice(0,15)}
+          onClick={this.handleLiveUpdateToggle.bind(this)}
+        >
+        Live Updates {this.props.liveUpdate ? 'Enabled' : 'Disabled'}
+        </Button>
         <Tabs justified className="filter-nav" bsStyle='pills'>
           <Tab eventKey={1} title="Emergency Type">
             <ButtonToolbar>
@@ -90,7 +107,7 @@ class FilterForm extends React.Component {
             </ToggleButtonGroup>
           </ButtonToolbar>
 
-          <FilterCalendar startDate={this.props.timeBounds.startDate} endDate={this.props.timeBounds.endDate} updateFilter={this.props.updateFilter} readOnly={this.state.readOnlyCalendar} />
+          <FilterCalendar startDate={this.props.timeBounds.startDate} endDate={this.props.timeBounds.endDate} updateFilter={this.props.updateFilter} liveUpdate={this.props.liveUpdate} toggleLiveUpdates={this.props.toggleLiveUpdates} readOnly={this.state.readOnlyCalendar} />
 
           </Tab>
         </Tabs>

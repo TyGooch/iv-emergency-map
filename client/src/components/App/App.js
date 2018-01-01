@@ -6,11 +6,16 @@ import FilterContainer from '../Filter/FilterContainer';
 import './app.css'
 
 class App extends React.Component {
+  getLiveUpdate(){
+    if(this.props.liveUpdate){
+      this.props.fetchEmergencies();
+    }
+  }
   componentWillMount() {
     this.props.fetchEmergencies();
   }
   componentDidMount() {
-    setInterval(this.props.fetchEmergencies, 2000);
+    setInterval(this.getLiveUpdate.bind(this), 2000);
   }
   render() {
     return(
