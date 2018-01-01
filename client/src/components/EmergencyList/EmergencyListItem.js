@@ -2,17 +2,9 @@ import React, { Component } from 'react';
 import style from './style.js'
 
 class EmergencyListItem extends Component {
-  constructor(props) {
-    super(props);
-    this.clickMarker = this.clickMarker.bind(this);
-  }
 
-  componentDidMount(){
-    this.props.marker.addListener('click', () => this.props.selectEmergency(this.props.id))
-  }
-
-  clickMarker(marker) {
-    window.google.maps.event.trigger(marker, 'click');
+  clickMarker() {
+    window.google.maps.event.trigger(this.props.marker, 'click');
   }
 
   getIconUrl(description) {
@@ -31,14 +23,14 @@ class EmergencyListItem extends Component {
   render(){
     var time = new Date(this.props.time).toString();
     time = time.slice(0, -15);
-
+    // this.props.marker.addListener('click', () => {
+    //   console.log('clicked');
+    //   this.props.selectEmergency(this.props.id)
+    // })
     return(
       <div
         className={this.props.isSelected ? "emergency-list-item-selected" : "emergency-list-item"}
-        onClick={ () => {
-          this.clickMarker(this.props.marker);
-          this.props.selectEmergency(this.props.id);
-        }}
+        onClick={ this.clickMarker.bind(this)}
       >
         <span>{ this.props.description }</span>
         <div className='emergency-list-item-info'>

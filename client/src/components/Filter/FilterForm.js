@@ -54,9 +54,9 @@ class FilterForm extends React.Component {
 
   render() {
     return(
-      <div style={style.FilterBarContainer}>
-        <span className="filter">Filter results: </span>
-        <Tabs justified id="filterNav">
+      <div className='filter-container' >
+        <span className="filter-header">Filter Controls</span>
+        <Tabs justified className="filter-nav" bsStyle='pills'>
           <Tab eventKey={1} title="Emergency Type">
             <ButtonToolbar>
                   <ToggleButtonGroup type="checkbox" defaultValue={Object.keys(this.props.types)} onChange={this.handleTypeToggle.bind(this)}>
