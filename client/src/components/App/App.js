@@ -10,7 +10,7 @@ class App extends React.Component {
     this.props.fetchEmergencies();
   }
   componentDidMount() {
-    // setInterval(this.props.fetchEmergencies, 2000);
+    setInterval(this.props.fetchEmergencies, 2000);
   }
   render() {
     return(

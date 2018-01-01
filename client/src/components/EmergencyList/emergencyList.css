@@ -12,12 +12,30 @@
 .emergency-list-header {
   flex: 0 0 auto;
   width:100%;
+  position: relative;
+  /* height: 20px; */
+  /* white-space: nowrap;
+  overflow: hidden; */
   border-bottom:1px solid rgb(238,238,238);
   padding:2px;
   text-align: center;
   background-color: rgb(255,206,67);
   /* color:rgb(255,255,255); */
   font-weight: bold;
+}
+
+.emergency-list-header-text {
+  display: inline;
+}
+
+.emergency-list-header-badge {
+  display: inline;
+  position: absolute;
+  right: 2px;
+  top:0;
+  /* float:right; */
+  /* position: relative; */
+  /* bottom:15px; */
 }
 
 .emergency-list {
@@ -105,6 +123,49 @@
 }
 
 .emergency-list-item-selected .emergency-list-item-image-container{
+  min-width:36px;
+  min-height:36px;
+  margin-left: 15px;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.emergency-list-item-new {
+  background-color: rgb(255,206,67);
+  margin:3px;
+  margin-bottom:0px;
+  cursor:pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.emergency-list-item-new span{
+  /* background-color: rgb(24, 160, 94); */
+  flex: 0 0 auto;
+  /* padding-left: 30px; */
+  font-weight: bold;
+  color: rgb(255,255,255);
+  text-align: left;
+  padding-left:10px;
+  align-self: center;
+  width: 100%;
+  border-bottom: 1px solid rgb(218,218,218);
+}
+
+.emergency-list-item-new p{
+  /* flex: 1 1 auto; */
+  margin:0px;
+  width: 100%;
+  align-self: center;
+  /* text-align: center; */
+  /* padding-left: 45px; */
+}
+
+.emergency-list-item-new .emergency-list-item-image-container{
   min-width:36px;
   min-height:36px;
   margin-left: 15px;

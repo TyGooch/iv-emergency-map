@@ -143,7 +143,6 @@ export default class Map extends React.Component {
   render() {
     this.clearMarkers();
     this.createMarkers(this.filterEmergencies());;
-    // debugger;
 
     return (
       <div className='map-container' >

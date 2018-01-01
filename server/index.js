@@ -93,7 +93,7 @@ app.use(bodyParser.json());
 //   res.setHeader('Access-Control-Allow-Credentials', 'true');
 //   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
 //   res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
-// 
+//
 //   // remove cacheing
 //   res.setHeader('Cache-Control', 'no-cache');
 //   next();
@@ -148,7 +148,7 @@ app.post('/api/emergencies', function(req, res) {
 //     emergency.position = req.body.position;
 //     emergency.description = req.body.description;
 //     emergency.time = req.body.time;
-// 
+//
 //     emergency.save(function(err) {
 //       if (err)
 //         res.send(err);
@@ -167,7 +167,7 @@ app.post('/api/emergencies', function(req, res) {
   //       res.json(emergencies)
   //     })
   //   })
-  // 
+  //
     app.get('/api/emergencies/latest', function(req, res) {
       var q = Emergency.find().sort({time: -1}).limit(10);
       q.exec(function(err, emergencies) {
@@ -186,7 +186,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(port, host, function() {
-  // getTweets();
+  getTweets();
   console.log(`api running on port ${port}`);
   console.log(`host running on ${host}`);
 });

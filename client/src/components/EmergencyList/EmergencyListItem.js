@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import style from './style.js'
 
 class EmergencyListItem extends Component {
 
-  clickMarker() {
+  handleItemClick() {
+    if(this.props.isNew){
+      this.props.removeFromNewEmergencies(this.props.id);
+    }
     window.google.maps.event.trigger(this.props.marker, 'click');
   }
 
@@ -23,16 +26,23 @@ class EmergencyListItem extends Component {
   render(){
     var time = new Date(this.props.time).toString();
     time = time.slice(0, -15);
-    // this.props.marker.addListener('click', () => {
-    //   console.log('clicked');
-    //   this.props.selectEmergency(this.props.id)
-    // })
+    let className;
+    if(this.props.isSelected){
+      className = 'emergency-list-item-selected'
+    } else if(this.props.isNew){
+      className = 'emergency-list-item-new'
+    } else {
+      className = 'emergency-list-item'
+    }
+
     return(
       <div
-        className={this.props.isSelected ? "emergency-list-item-selected" : "emergency-list-item"}
-        onClick={ this.clickMarker.bind(this)}
+        className={ className }
+        onClick={ this.handleItemClick.bind(this) }
       >
-        <span>{ this.props.description }</span>
+        <span>
+        { this.props.description }
+        </span>
         <div className='emergency-list-item-info'>
           <div className='emergency-list-item-image-container'>
             <img className='emergency-list-item-image' src={this.getIconUrl(this.props.description)} />
