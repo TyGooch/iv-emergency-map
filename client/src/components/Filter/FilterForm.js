@@ -185,7 +185,7 @@ class FilterForm extends React.Component {
         >
           <FilterPopover >
             <ButtonToolbar>
-              <ToggleButtonGroup type="radio" name="timeOptions" defaultValue={this.state.dateRange} onChange={this.handleDateToggle.bind(this)}>
+              <ToggleButtonGroup vertical type="radio" name="timeOptions" defaultValue={this.state.dateRange} onChange={this.handleDateToggle.bind(this)}>
                 <ToggleButton bsStyle='custom' value={'1'}>Yesterday</ToggleButton>
                 <ToggleButton bsStyle='custom' value={'7'}>1 Week Ago</ToggleButton>
                 <ToggleButton bsStyle='custom' value={'31'}>1 Month Ago</ToggleButton>
