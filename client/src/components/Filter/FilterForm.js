@@ -41,6 +41,10 @@ class FilterForm extends React.Component {
     this.props.updateFilter('limit', event.target.value)
   };
 
+  showAllEmergencies(event){
+    this.props.updateFilter('limit', this.props.filteredEmergencyCount)
+  };
+
   handleStartDateChange(event){
     if(event.target.value.length === 10){
       let date = new Date(event.target.value);
@@ -163,14 +167,21 @@ class FilterForm extends React.Component {
           target={() => ReactDOM.findDOMNode(this.refs.emergencyLimitButton)}
         >
           <FilterPopover >
-            <div>
+            <div className='filter-limit-popover'>
               <input
+                className='filter-limit-input'
                 type="number"
                 min="1"
                 pattern="[0-9]*"
                 value={this.props.limit}
                 onChange={this.handleLimitChange.bind(this)}
               />
+              <Button
+                bsStyle='custom'
+                onClick={this.showAllEmergencies.bind(this)}
+              >
+              Show All
+              </Button>
             </div>
           </FilterPopover>
         </Overlay>

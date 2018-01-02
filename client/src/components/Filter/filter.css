@@ -77,6 +77,18 @@ div label input {
   background-color: black;
 }
 
+.filter-limit-popover{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.filter-limit-input {
+  width:50px;
+  text-align: center;
+  margin: 5px;
+}
+
 .date-range-popover {
   display: flex;
   flex-direction: row;

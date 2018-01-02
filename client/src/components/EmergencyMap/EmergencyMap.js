@@ -91,9 +91,10 @@ export default class Map extends React.Component {
         }
       }
     })
-    if(filteredEmergencies.length > filters.limit){
-      filteredEmergencies = filteredEmergencies.slice(filteredEmergencies.length - filters.limit);
-    }
+    // this.setState({filteredEmergencyCount:filteredEmergencies.length})
+    // if(filteredEmergencies.length > filters.limit){
+    //   filteredEmergencies = filteredEmergencies.slice(filteredEmergencies.length - filters.limit);
+    // }
 
     return filteredEmergencies;
   }
@@ -160,7 +161,7 @@ export default class Map extends React.Component {
 
   render() {
     this.clearMarkers();
-    this.createMarkers(this.filterEmergencies());;
+    this.createMarkers(this.filterEmergencies().slice(this.filterEmergencies().length - this.props.filters.limit));;
 
     return (
       <div>
@@ -173,11 +174,11 @@ export default class Map extends React.Component {
           <div className='ui-wrapper'>
             <div className='map-container' >
               <div id='map' ref='map'/>
-              <FilterContainer />
+              <FilterContainer filteredEmergencyCount={this.filterEmergencies().length}/>
             </div>
             <EmergencyList
               map={ this.map }
-              emergencies={ this.filterEmergencies().reverse() }
+              emergencies={ this.filterEmergencies().slice(this.filterEmergencies().length - this.props.filters.limit).reverse() }
               markers={ this.markers.reverse() }
               liveUpdate ={ this.props.filters.liveUpdate }
             />
