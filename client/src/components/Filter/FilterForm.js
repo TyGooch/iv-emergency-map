@@ -183,34 +183,44 @@ class FilterForm extends React.Component {
           placement="top"
           target={() => ReactDOM.findDOMNode(this.refs.emergencyDateButton)}
         >
-          <FilterPopover >
-            <ButtonToolbar>
-              <ToggleButtonGroup vertical type="radio" name="timeOptions" defaultValue={this.state.dateRange} onChange={this.handleDateToggle.bind(this)}>
-                <ToggleButton bsStyle='custom' value={'1'}>Yesterday</ToggleButton>
-                <ToggleButton bsStyle='custom' value={'7'}>1 Week Ago</ToggleButton>
-                <ToggleButton bsStyle='custom' value={'31'}>1 Month Ago</ToggleButton>
-                <ToggleButton bsStyle='custom' value={'custom'}>Custom Range</ToggleButton>
-              </ToggleButtonGroup>
-            </ButtonToolbar>
-
-            <Cleave htmlRef={(ref) => this.startDateInput = ref }
-                    className='date-input'
-                    disabled={this.state.readOnlyCalendar}
-                    style={!this.state.readOnlyCalendar ? {cursor:'pointer'} : null}
-                    placeholder="From"
-                    options={{date: true, datePattern: ['m', 'd', 'Y']}}
-                    onChange={this.handleStartDateChange.bind(this)}
-                    value={moment(this.props.timeBounds.startDate).format('MM/DD/YYYY')}/>
-            {' – '}
-            <Cleave htmlRef={(ref) => this.endDateInput = ref }
-                    className='date-input'
-                    disabled={this.state.readOnlyCalendar}
-                    style={!this.state.readOnlyCalendar ? {cursor:'pointer'} : null}
-                    placeholder="To"
-                    options={{date: true, datePattern: ['m', 'd', 'Y']}}
-                    onChange={this.handleEndDateChange.bind(this)}
-                    value={moment(this.props.timeBounds.endDate).format('MM/DD/YYYY')}/>
-            <FilterCalendar startDate={this.props.timeBounds.startDate} endDate={this.props.timeBounds.endDate} updateFilter={this.props.updateFilter} liveUpdate={this.props.liveUpdate} toggleLiveUpdates={this.props.toggleLiveUpdates} readOnly={this.state.readOnlyCalendar} />
+          <FilterPopover>
+            <div className='date-range-popover'>
+              <div className='date-range-buttons'>
+              <span>View Emergencies Since</span>
+                <ButtonToolbar>
+                  <ToggleButtonGroup vertical type="radio" name="dateRanges" defaultValue={this.state.dateRange} onChange={this.handleDateToggle.bind(this)}>
+                    <ToggleButton bsStyle='custom' value={'1'}>Yesterday</ToggleButton>
+                    <ToggleButton bsStyle='custom' value={'7'}>1 Week Ago</ToggleButton>
+                    <ToggleButton bsStyle='custom' value={'31'}>1 Month Ago</ToggleButton>
+                    <ToggleButton bsStyle='custom' value={'custom'}>Custom Range</ToggleButton>
+                  </ToggleButtonGroup>
+                </ButtonToolbar>
+              </div>
+              <div className='date-range-calendar'>
+                <div className='date-range-calendar-input'>
+                  <Cleave htmlRef={(ref) => this.startDateInput = ref }
+                          className='date-input'
+                          disabled={this.state.readOnlyCalendar}
+                          style={!this.state.readOnlyCalendar ? {cursor:'pointer'} : null}
+                          placeholder="From"
+                          options={{date: true, datePattern: ['m', 'd', 'Y']}}
+                          onChange={this.handleStartDateChange.bind(this)}
+                          value={moment(this.props.timeBounds.startDate).format('MM/DD/YYYY')}/>
+                  {' – '}
+                  <Cleave htmlRef={(ref) => this.endDateInput = ref }
+                          className='date-input'
+                          disabled={this.state.readOnlyCalendar}
+                          style={!this.state.readOnlyCalendar ? {cursor:'pointer'} : null}
+                          placeholder="To"
+                          options={{date: true, datePattern: ['m', 'd', 'Y']}}
+                          onChange={this.handleEndDateChange.bind(this)}
+                          value={moment(this.props.timeBounds.endDate).format('MM/DD/YYYY')}/>
+                </div>
+                <div className='date-range-calendar-view'>
+                  <FilterCalendar startDate={this.props.timeBounds.startDate} endDate={this.props.timeBounds.endDate} updateFilter={this.props.updateFilter} liveUpdate={this.props.liveUpdate} toggleLiveUpdates={this.props.toggleLiveUpdates} readOnly={this.state.readOnlyCalendar} />
+                </div>
+              </div>
+            </div>
           </FilterPopover>
         </Overlay>
 
