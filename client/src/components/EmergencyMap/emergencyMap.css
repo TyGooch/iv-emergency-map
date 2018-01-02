@@ -1,3 +1,14 @@
+.app-ui-container{
+  width:100%;
+  height: 90vh;
+  margin-top:0px;
+  padding-top:0px;
+  overflow: auto;
+  border-bottom: 1px solid rgb(224,224,224);
+  display: flex;
+  flex-direction: row;
+}
+
 .live-update-banner-enabled {
   background-color: rgb(91,184,92);
   color: white;
@@ -13,12 +24,15 @@
 }
 
 .map-container{
-  width:100vw;
-  height:55vh;
+  flex: 0 0 auto;
+  width:75vw;
+  /* height:85vh; */
   display:flex;
+  flex-direction: column;
   border-bottom: 1px solid rgb(224,224,224);
 }
 
 #map {
-  width: 75%;
+  flex: 1 1 auto;
+  width: 100%;
 }

@@ -1,12 +1,15 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 // import DatePicker from 'react-datepicker';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker } from 'react-dates';
 import moment from 'moment';
 import FilterCalendar from './FilterCalendar';
+import FilterPopover from './FilterPopover';
 import Cleave from 'cleave.js/react';
-import {Tabs, Tab, ButtonToolbar, ToggleButtonGroup, ToggleButton, Button} from 'react-bootstrap';
+import { bootstrapUtils } from 'react-bootstrap/lib/utils';
+import {Overlay, OverlayTrigger, Popover, Portal, Nav, NavItem, Tabs, Tab, ButtonToolbar, ButtonGroup, ToggleButtonGroup, ToggleButton, Button} from 'react-bootstrap';
 
 
 import style from './style.js'
@@ -17,9 +20,15 @@ class FilterForm extends React.Component {
   constructor(props){
     super(props);
     this.state={
+      showOverlay: false,
+      selectedOverlay: null,
       readOnlyCalendar: true,
       activeButton: false
     }
+  }
+
+  toggleOverlay(){
+    this.setState({ showOverlay: !this.state.showOverlay })
   }
 
   handleLiveUpdateToggle(event){
@@ -94,23 +103,129 @@ class FilterForm extends React.Component {
     }
   }
 
+  // render() {
+  //   return(
+  //     <div className='filter-container' >
+  //       <ButtonToolbar justified className="filter-nav" bsStyle='pills'>
+  //         <Button eventKey={1} title="Visible Emergency Types">
+            // <ButtonToolbar>
+            //       <ToggleButtonGroup vertical type="checkbox" defaultValue={Object.keys(this.props.types)} onChange={this.handleTypeToggle.bind(this)}>
+            //         <ToggleButton data-key='Medical' value={'Medical'} >Medical</ToggleButton>
+            //         <ToggleButton data-key='Fire' value={'Fire'}>Fire</ToggleButton>
+            //         <ToggleButton data-key='Vehicle' value={'Vehicle'}>Vehicle</ToggleButton>
+            //         <ToggleButton data-key='Other' value={'Other'}>Other</ToggleButton>
+            //       </ToggleButtonGroup>
+            // </ButtonToolbar>
+  //         </Button>
+  //         <Button eventKey={2} title="Maximum Emergencies Shown">
+            // <div style={style.LimitFilter}>
+            //   Show at most
+            //   <input
+            //     type="number"
+            //     min="1"
+            //     pattern="[0-9]*"
+            //     value={this.props.limit}
+            //     onChange={this.handleLimitChange.bind(this)}
+            //   />
+            //   Emergencies
+            // </div>
+  //         </Button>
+  //         <Button eventKey={3} title="Range of Dates">
+          // <ButtonToolbar>
+          //   <ToggleButtonGroup type="radio" name="timeOptions" defaultValue={'7'} onChange={this.handleDateToggle.bind(this)}>
+          //     <ToggleButton bsStyle='custom' value={'1'}>Yesterday</ToggleButton>
+          //     <ToggleButton bsStyle='custom' value={'7'}>1 Week Ago</ToggleButton>
+          //     <ToggleButton bsStyle='custom' value={'31'}>1 Month Ago</ToggleButton>
+          //     <ToggleButton bsStyle='custom' value={'custom'}>Custom Range</ToggleButton>
+          //   </ToggleButtonGroup>
+          // </ButtonToolbar>
+          //
+          // <Cleave htmlRef={(ref) => this.startDateInput = ref }
+          //         className='date-input'
+          //         disabled={this.state.readOnlyCalendar}
+          //         style={!this.state.readOnlyCalendar ? {cursor:'pointer'} : null}
+          //         placeholder="From"
+          //         options={{date: true, datePattern: ['m', 'd', 'Y']}}
+          //         onChange={this.handleStartDateChange.bind(this)}
+          //         value={moment(this.props.timeBounds.startDate).format('MM/DD/YYYY')}/>
+          // {' – '}
+          // <Cleave htmlRef={(ref) => this.endDateInput = ref }
+          //         className='date-input'
+          //         disabled={this.state.readOnlyCalendar}
+          //         style={!this.state.readOnlyCalendar ? {cursor:'pointer'} : null}
+          //         placeholder="To"
+          //         options={{date: true, datePattern: ['m', 'd', 'Y']}}
+          //         onChange={this.handleEndDateChange.bind(this)}
+          //         value={moment(this.props.timeBounds.endDate).format('MM/DD/YYYY')}/>
+          // <FilterCalendar startDate={this.props.timeBounds.startDate} endDate={this.props.timeBounds.endDate} updateFilter={this.props.updateFilter} liveUpdate={this.props.liveUpdate} toggleLiveUpdates={this.props.toggleLiveUpdates} readOnly={this.state.readOnlyCalendar} />
+  //
+  //         </Button>
+  //         <Button title="Live Updates">
+  //           Live Updates are {this.props.liveUpdate ? 'Enabled' : 'Disabled'}
+  //           <Button
+  //             bsStyle='custom'
+  //             active={!this.props.liveUpdate}
+  //             disabled={this.props.timeBounds.endDate === null || this.props.timeBounds.endDate === new Date(new Date().setHours(23,59,59,999))}
+  //             onClick={this.handleLiveUpdateToggle.bind(this)}
+  //           >
+  //           {this.props.liveUpdate ? 'Disable' : 'Enable'}
+  //           </Button>
+  //         </Button>
+  //
+  //       </ButtonToolbar>
+  //     </div>
+  //   )
+  // }
   render() {
+    bootstrapUtils.addStyle(Button, 'custom');
+    bootstrapUtils.addStyle(Button, 'nav');
     return(
       <div className='filter-container' >
-        <Tabs justified className="filter-nav" bsStyle='pills'>
-          <Tab eventKey={1} title="Visible Emergency Types">
+        <ButtonGroup className="filter-nav" >
+          <Button bsStyle='nav' active={this.state.selectedOverlay === 'emergencyType'} ref="emergencyTypesButton" onClick={() => this.setState({selectedOverlay:'emergencyType'})}>
+            Visible Emergency Types
+          </Button>
+          <Button bsStyle='nav' active={this.state.selectedOverlay === 'emergencyLimit'} ref="emergencyLimitButton" onClick={() => this.setState({selectedOverlay:'emergencyLimit'})}>
+            Maximum Emergencies Shown
+          </Button>
+          <Button bsStyle='nav' active={this.state.selectedOverlay === 'emergencyDate'} ref="emergencyDateButton" onClick={() => this.setState({selectedOverlay:'emergencyDate'})}>
+            Range of Dates
+          </Button>
+          <Button bsStyle='nav' active={this.state.selectedOverlay === 'liveUpdates'} ref="liveUpdatesButton" onClick={() => this.setState({selectedOverlay:'liveUpdates'})}>
+            Live Updates
+          </Button>
+        </ButtonGroup>
+
+        <Overlay
+          animation={false}
+          show={this.state.selectedOverlay === 'emergencyType'}
+          onHide={() => this.setState({ selectedOverlay: null })}
+          rootClose={true}
+          placement="top"
+          target={() => ReactDOM.findDOMNode(this.refs.emergencyTypesButton)}
+        >
+          <FilterPopover >
             <ButtonToolbar>
-                  <ToggleButtonGroup vertical type="checkbox" defaultValue={Object.keys(this.props.types)} onChange={this.handleTypeToggle.bind(this)}>
-                    <ToggleButton data-key='Medical' value={'Medical'} >Medical</ToggleButton>
-                    <ToggleButton data-key='Fire' value={'Fire'}>Fire</ToggleButton>
-                    <ToggleButton data-key='Vehicle' value={'Vehicle'}>Vehicle</ToggleButton>
-                    <ToggleButton data-key='Other' value={'Other'}>Other</ToggleButton>
-                  </ToggleButtonGroup>
+              <ToggleButtonGroup vertical type="checkbox" defaultValue={Object.keys(this.props.types).filter(type => this.props.types[type] === true)} onChange={this.handleTypeToggle.bind(this)}>
+                <ToggleButton bsStyle='custom' data-key='Medical' value={'Medical'} >Medical</ToggleButton>
+                <ToggleButton bsStyle='custom' data-key='Fire' value={'Fire'}>Fire</ToggleButton>
+                <ToggleButton bsStyle='custom' data-key='Vehicle' value={'Vehicle'}>Vehicle</ToggleButton>
+                <ToggleButton bsStyle='custom' data-key='Other' value={'Other'}>Other</ToggleButton>
+              </ToggleButtonGroup>
             </ButtonToolbar>
-          </Tab>
-          <Tab eventKey={2} title="Maximum Emergencies Shown">
-            <div style={style.LimitFilter}>
-              Show at most
+          </FilterPopover>
+        </Overlay>
+
+        <Overlay
+          animation={false}
+          show={this.state.selectedOverlay === 'emergencyLimit'}
+          onHide={() => this.setState({ selectedOverlay: null })}
+          rootClose={true}
+          placement="top"
+          target={() => ReactDOM.findDOMNode(this.refs.emergencyLimitButton)}
+        >
+          <FilterPopover >
+            <div>
               <input
                 type="number"
                 min="1"
@@ -118,41 +233,58 @@ class FilterForm extends React.Component {
                 value={this.props.limit}
                 onChange={this.handleLimitChange.bind(this)}
               />
-              Emergencies
             </div>
-          </Tab>
-          <Tab eventKey={3} title="Range of Dates">
-          <ButtonToolbar>
-            <ToggleButtonGroup type="radio" name="timeOptions" defaultValue={'7'} onChange={this.handleDateToggle.bind(this)}>
-              <ToggleButton bsStyle='custom' value={'1'}>Yesterday</ToggleButton>
-              <ToggleButton bsStyle='custom' value={'7'}>1 Week Ago</ToggleButton>
-              <ToggleButton bsStyle='custom' value={'31'}>1 Month Ago</ToggleButton>
-              <ToggleButton bsStyle='custom' value={'custom'}>Custom Range</ToggleButton>
-            </ToggleButtonGroup>
-          </ButtonToolbar>
+          </FilterPopover>
+        </Overlay>
 
-          <Cleave htmlRef={(ref) => this.startDateInput = ref }
-                  className='date-input'
-                  disabled={this.state.readOnlyCalendar}
-                  style={!this.state.readOnlyCalendar ? {cursor:'pointer'} : null}
-                  placeholder="From"
-                  options={{date: true, datePattern: ['m', 'd', 'Y']}}
-                  onChange={this.handleStartDateChange.bind(this)}
-                  value={moment(this.props.timeBounds.startDate).format('MM/DD/YYYY')}/>
-          {' – '}
-          <Cleave htmlRef={(ref) => this.endDateInput = ref }
-                  className='date-input'
-                  disabled={this.state.readOnlyCalendar}
-                  style={!this.state.readOnlyCalendar ? {cursor:'pointer'} : null}
-                  placeholder="To"
-                  options={{date: true, datePattern: ['m', 'd', 'Y']}}
-                  onChange={this.handleEndDateChange.bind(this)}
-                  value={moment(this.props.timeBounds.endDate).format('MM/DD/YYYY')}/>
-          <FilterCalendar startDate={this.props.timeBounds.startDate} endDate={this.props.timeBounds.endDate} updateFilter={this.props.updateFilter} liveUpdate={this.props.liveUpdate} toggleLiveUpdates={this.props.toggleLiveUpdates} readOnly={this.state.readOnlyCalendar} />
+        <Overlay
+          animation={false}
+          show={this.state.selectedOverlay === 'emergencyDate'}
+          onHide={() => this.setState({ selectedOverlay: null })}
+          rootClose={true}
+          placement="top"
+          target={() => ReactDOM.findDOMNode(this.refs.emergencyDateButton)}
+        >
+          <FilterPopover >
+            <ButtonToolbar>
+              <ToggleButtonGroup type="radio" name="timeOptions" defaultValue={'7'} onChange={this.handleDateToggle.bind(this)}>
+                <ToggleButton bsStyle='custom' value={'1'}>Yesterday</ToggleButton>
+                <ToggleButton bsStyle='custom' value={'7'}>1 Week Ago</ToggleButton>
+                <ToggleButton bsStyle='custom' value={'31'}>1 Month Ago</ToggleButton>
+                <ToggleButton bsStyle='custom' value={'custom'}>Custom Range</ToggleButton>
+              </ToggleButtonGroup>
+            </ButtonToolbar>
 
-          </Tab>
-          <Tab eventKey={4} title="Live Updates">
-            Live Updates are {this.props.liveUpdate ? 'Enabled' : 'Disabled'}
+            <Cleave htmlRef={(ref) => this.startDateInput = ref }
+                    className='date-input'
+                    disabled={this.state.readOnlyCalendar}
+                    style={!this.state.readOnlyCalendar ? {cursor:'pointer'} : null}
+                    placeholder="From"
+                    options={{date: true, datePattern: ['m', 'd', 'Y']}}
+                    onChange={this.handleStartDateChange.bind(this)}
+                    value={moment(this.props.timeBounds.startDate).format('MM/DD/YYYY')}/>
+            {' – '}
+            <Cleave htmlRef={(ref) => this.endDateInput = ref }
+                    className='date-input'
+                    disabled={this.state.readOnlyCalendar}
+                    style={!this.state.readOnlyCalendar ? {cursor:'pointer'} : null}
+                    placeholder="To"
+                    options={{date: true, datePattern: ['m', 'd', 'Y']}}
+                    onChange={this.handleEndDateChange.bind(this)}
+                    value={moment(this.props.timeBounds.endDate).format('MM/DD/YYYY')}/>
+            <FilterCalendar startDate={this.props.timeBounds.startDate} endDate={this.props.timeBounds.endDate} updateFilter={this.props.updateFilter} liveUpdate={this.props.liveUpdate} toggleLiveUpdates={this.props.toggleLiveUpdates} readOnly={this.state.readOnlyCalendar} />
+          </FilterPopover>
+        </Overlay>
+
+        <Overlay
+          animation={false}
+          show={this.state.selectedOverlay === 'liveUpdates'}
+          onHide={() => this.setState({ selectedOverlay: null })}
+          rootClose={true}
+          placement="top"
+          target={() => ReactDOM.findDOMNode(this.refs.liveUpdatesButton)}
+        >
+          <FilterPopover >
             <Button
               bsStyle='custom'
               active={!this.props.liveUpdate}
@@ -161,9 +293,9 @@ class FilterForm extends React.Component {
             >
             {this.props.liveUpdate ? 'Disable' : 'Enable'}
             </Button>
-          </Tab>
+          </FilterPopover>
+        </Overlay>
 
-        </Tabs>
       </div>
     )
   }
