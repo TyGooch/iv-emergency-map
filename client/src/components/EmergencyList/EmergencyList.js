@@ -74,6 +74,7 @@ class EmergencyList extends Component {
       let isNewEmergency = this.isNewEmergency.bind(this);
       let removeFromNewEmergencies = this.removeFromNewEmergencies.bind(this);
       // debugger;
+      console.log(this.state.newEmergencyIds);
 
       let newEmergencyBadge = null;
       if(newEmergencyIds.length > 0){

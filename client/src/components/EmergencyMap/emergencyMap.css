@@ -31,7 +31,7 @@
   width: 75vw;
   opacity: 1;
   transition: all 1000ms linear;
-  background-color: rgb(91,184,92);
+  /* background-color: rgb(91,184,92); */
   color: white;
   padding: 3px;
   text-align: center;
@@ -44,7 +44,7 @@
   width: 75vw;
   opacity: 0;
   transition: all 500ms linear;
-  background-color: rgb(91,184,92);
+  /* background-color: rgb(91,184,92); */
   color: white;
   padding: 3px;
   text-align: center;
@@ -52,7 +52,7 @@
 }
 
 .live-update-banner-disabled {
-  background-color: rgb(240,174,78);
+  /* background-color: rgb(240,174,78); */
   color: white;
   padding: 3px;
   text-align: center;

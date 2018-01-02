@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Badge } from 'react-bootstrap';
 import style from './style.js'
 
 class EmergencyListItem extends Component {
@@ -42,6 +43,7 @@ class EmergencyListItem extends Component {
       >
         <span>
         { this.props.description }
+        { this.props.isNew ? (<div className='emergency-list-item-badge'><Badge >New</Badge></div>) : null}
         </span>
         <div className='emergency-list-item-info'>
           <div className='emergency-list-item-image-container'>

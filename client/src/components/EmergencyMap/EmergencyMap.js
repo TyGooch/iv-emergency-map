@@ -165,7 +165,9 @@ export default class Map extends React.Component {
     return (
       <div>
         <div className='app-ui-container' >
-          <div className={this.state.showingUpdateBanner ? 'live-update-banner-shown' : 'live-update-banner-hidden'}>
+          <div className={this.state.showingUpdateBanner ? 'live-update-banner-shown' : 'live-update-banner-hidden'}
+               style={this.props.filters.liveUpdate ? {backgroundColor:'rgb(91,184,92)'} : {backgroundColor:'rgb(240,174,78)'}}
+          >
           Live Updates {this.props.filters.liveUpdate ? 'Enabled' : 'Disabled'}
           </div>
           <div className='ui-wrapper'>
@@ -177,6 +179,7 @@ export default class Map extends React.Component {
               map={ this.map }
               emergencies={ this.filterEmergencies().reverse() }
               markers={ this.markers.reverse() }
+              liveUpdate ={ this.props.filters.liveUpdate }
             />
           </div>
         </div>

@@ -1,13 +1,14 @@
 .emergency-list-container {
-  height: 88vh;
+  height: 90vh;
   flex: 1;
   /* overflow: scroll; */
   overflow: auto;
   display: flex;
   flex-direction: column;
-  padding-bottom:2px;
-  background-color: rgb(238,238,238);
-  border-bottom: 1px solid rgb(218,218,218);
+  /* padding-bottom:2px; */
+  /* background-color: rgb(238,238,238); */
+  background-color: rgb(155, 190, 235);
+  /* border-bottom: 1px solid rgb(218,218,218); */
 
 }
 
@@ -18,7 +19,7 @@
   /* height: 20px; */
   /* white-space: nowrap;
   overflow: hidden; */
-  border-bottom:1px solid rgb(238,238,238);
+  /* border-bottom:1px solid rgb(238,238,238); */
   padding:2px;
   text-align: center;
   /* background-color: rgb(255,206,67); */
@@ -33,15 +34,16 @@
 .emergency-list-header-badge {
   display: inline;
   position: absolute;
-  right: 2px;
+  right: 5px;
   top:0;
 }
 
 .emergency-list {
   flex: 1 1 auto;
-  border:1px solid #f1f1f1;
+  /* border:1px solid #f1f1f1; */
   overflow:scroll;
-  background-color: rgb(238,238,238);
+  /* background-color: rgb(238,238,238); */
+  background-color: rgb(155, 190, 235);
   /* padding:0px 3px 3px 3px; */
   padding-left: 3px;
   padding-right: 3px;
@@ -64,6 +66,7 @@
 .emergency-list-item {
   /* background-color: rgb(24, 160, 94); */
   background-color: rgb(218, 218, 218);
+  /* background-color: rgb(155, 190, 235); */
   margin:3px;
   margin-bottom:0px;
   cursor:pointer;
@@ -138,7 +141,8 @@
 }
 
 .emergency-list-item-new {
-  background-color: rgb(255,206,67);
+  /* background-color: rgb(255,206,67); */
+  background-color: rgb(218,218,218);
   margin:3px;
   margin-bottom:0px;
   cursor:pointer;
@@ -151,7 +155,7 @@
   flex: 0 0 auto;
   /* padding-left: 30px; */
   font-weight: bold;
-  color: rgb(255,255,255);
+  color: rgb(117,117,117);
   text-align: left;
   padding-left:10px;
   align-self: center;
@@ -168,7 +172,14 @@
   /* padding-left: 45px; */
 }
 
-.emergency-list-item-new .emergency-list-item-image-container{
+.emergency-list-item-badge {
+  /* background-color:rgb(255,255,255); */
+}
+.emergency-list-item-badge span{
+  color:rgb(255,255,255);
+}
+
+/* .emergency-list-item-new .emergency-list-item-image-container{
   min-width:36px;
   min-height:36px;
   margin-left: 15px;
@@ -178,7 +189,7 @@
   justify-content: center;
   border-radius: 50%;
   background-color: white;
-}
+} */
 
 .emergency-list-item-image-container :hover {
   border-radius: 50%;
