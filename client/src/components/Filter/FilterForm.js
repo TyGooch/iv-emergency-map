@@ -98,24 +98,17 @@ class FilterForm extends React.Component {
     return(
       <div className='filter-container' >
         <Tabs justified className="filter-nav" bsStyle='pills'>
-          <Tab eventKey={1} title="Emergency Type">
+          <Tab eventKey={1} title="Visible Emergency Types">
             <ButtonToolbar>
-                  <ToggleButtonGroup type="checkbox" defaultValue={Object.keys(this.props.types)} onChange={this.handleTypeToggle.bind(this)}>
+                  <ToggleButtonGroup vertical type="checkbox" defaultValue={Object.keys(this.props.types)} onChange={this.handleTypeToggle.bind(this)}>
                     <ToggleButton data-key='Medical' value={'Medical'} >Medical</ToggleButton>
                     <ToggleButton data-key='Fire' value={'Fire'}>Fire</ToggleButton>
                     <ToggleButton data-key='Vehicle' value={'Vehicle'}>Vehicle</ToggleButton>
                     <ToggleButton data-key='Other' value={'Other'}>Other</ToggleButton>
                   </ToggleButtonGroup>
             </ButtonToolbar>
-            <Button
-              bsStyle={this.props.liveUpdate ? 'success' : 'default'}
-              disabled={this.props.timeBounds.endDate === null || this.props.timeBounds.endDate.toString().slice(0,15) !== new Date().toString().slice(0,15)}
-              onClick={this.handleLiveUpdateToggle.bind(this)}
-            >
-            Live Updates {this.props.liveUpdate ? 'Enabled' : 'Disabled'}
-            </Button>
           </Tab>
-          <Tab eventKey={2} title="Count">
+          <Tab eventKey={2} title="Maximum Emergencies Shown">
             <div style={style.LimitFilter}>
               Show at most
               <input
@@ -128,7 +121,7 @@ class FilterForm extends React.Component {
               Emergencies
             </div>
           </Tab>
-          <Tab eventKey={3} title="Date">
+          <Tab eventKey={3} title="Range of Dates">
           <ButtonToolbar>
             <ToggleButtonGroup type="radio" name="timeOptions" defaultValue={'7'} onChange={this.handleDateToggle.bind(this)}>
               <ToggleButton bsStyle='custom' value={'1'}>Yesterday</ToggleButton>
@@ -158,6 +151,18 @@ class FilterForm extends React.Component {
           <FilterCalendar startDate={this.props.timeBounds.startDate} endDate={this.props.timeBounds.endDate} updateFilter={this.props.updateFilter} liveUpdate={this.props.liveUpdate} toggleLiveUpdates={this.props.toggleLiveUpdates} readOnly={this.state.readOnlyCalendar} />
 
           </Tab>
+          <Tab eventKey={4} title="Live Updates">
+            Live Updates are {this.props.liveUpdate ? 'Enabled' : 'Disabled'}
+            <Button
+              bsStyle='custom'
+              active={!this.props.liveUpdate}
+              disabled={this.props.timeBounds.endDate === null || this.props.timeBounds.endDate === new Date(new Date().setHours(23,59,59,999))}
+              onClick={this.handleLiveUpdateToggle.bind(this)}
+            >
+            {this.props.liveUpdate ? 'Disable' : 'Enable'}
+            </Button>
+          </Tab>
+
         </Tabs>
       </div>
     )

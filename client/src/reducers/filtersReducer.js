@@ -7,7 +7,7 @@ import { UPDATE_FILTER, TOGGLE_LIVE_UPDATES } from '../actions/filterActions';
 const defaultFilters = Object.freeze({
   liveUpdate: true,
   // default to within last 24 hrs
-  timeBounds: { startDate: new Date(Date.now() - (7*24*60*60*1000)), endDate: new Date(Date.now() + (1*60*60*1000)) },
+  timeBounds: { startDate: new Date(Date.now() - (7*24*60*60*1000)), endDate: new Date(new Date().setHours(23,59,59,999)) },
   limit: 10,
   types: { Medical: true, Vehicle: true, Fire: true, Other: true }
 });
