@@ -17,6 +17,23 @@ export default class Map extends React.Component {
     this.getIconUrl = this.getIconUrl.bind(this);
     this.markers = [];
     this.map = null;
+    this.state={
+      showingUpdateBanner:false
+    };
+  }
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.filters.liveUpdate !== this.props.filters.liveUpdate){
+      this.setState({
+        showingUpdateBanner: true
+      });
+
+      setTimeout(() => {
+        this.setState({
+          showingUpdateBanner: false
+        });
+      }, 5000);
+    }
   }
 
   componentDidMount() {
@@ -148,7 +165,7 @@ export default class Map extends React.Component {
     return (
       <div>
         <div className='app-ui-container' >
-          <div className={this.props.filters.liveUpdate ? 'live-update-banner-enabled' : 'live-update-banner-disabled'}>
+          <div className={this.state.showingUpdateBanner ? 'live-update-banner-shown' : 'live-update-banner-hidden'}>
           Live Updates {this.props.filters.liveUpdate ? 'Enabled' : 'Disabled'}
           </div>
           <div className='ui-wrapper'>
