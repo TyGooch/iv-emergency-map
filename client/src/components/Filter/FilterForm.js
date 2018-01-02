@@ -5,6 +5,7 @@ import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker } from 'react-dates';
 import moment from 'moment';
 import FilterCalendar from './FilterCalendar';
+import Cleave from 'cleave.js/react';
 import {Tabs, Tab, ButtonToolbar, ToggleButtonGroup, ToggleButton, Button} from 'react-bootstrap';
 
 
@@ -28,6 +29,29 @@ class FilterForm extends React.Component {
 
   handleLimitChange(event){
     this.props.updateFilter('limit', event.target.value)
+  };
+
+  handleStartDateChange(event){
+    if(event.target.value.length === 10){
+      let date = new Date(event.target.value);
+      if(date <= this.props.timeBounds.endDate){
+        this.props.updateFilter('timeBounds', {startDate: new Date(event.target.value), endDate: this.props.timeBounds.endDate})
+        this.endDateInput.focus();
+      } else{
+        this.props.updateFilter('timeBounds', {startDate: new Date(event.target.value), endDate: null})
+      }
+    }
+  };
+
+  handleEndDateChange(event){
+    if(event.target.value.length === 10){
+      let date = new Date(event.target.value);
+      if(date <= new Date(moment().set({'hours':11, 'minutes':59, 'seconds':59}))){
+        this.props.updateFilter('timeBounds', {startDate: this.props.timeBounds.startDate, endDate: new Date(event.target.value)})
+      } else{
+        this.props.updateFilter('timeBounds', {startDate: this.props.timeBounds.startDate, endDate: this.props.timeBounds.endDate})
+      }
+    }
   };
 
   handleDateToggle(dayInterval) {
@@ -65,14 +89,6 @@ class FilterForm extends React.Component {
   render() {
     return(
       <div className='filter-container' >
-        <span className="filter-header">Filter Controls</span>
-        <Button
-          bsStyle={this.props.liveUpdate ? 'success' : 'default'}
-          disabled={this.props.timeBounds.endDate === null || this.props.timeBounds.endDate.toString().slice(0,15) !== new Date().toString().slice(0,15)}
-          onClick={this.handleLiveUpdateToggle.bind(this)}
-        >
-        Live Updates {this.props.liveUpdate ? 'Enabled' : 'Disabled'}
-        </Button>
         <Tabs justified className="filter-nav" bsStyle='pills'>
           <Tab eventKey={1} title="Emergency Type">
             <ButtonToolbar>
@@ -83,6 +99,13 @@ class FilterForm extends React.Component {
                     <ToggleButton data-key='Other' value={'Other'}>Other</ToggleButton>
                   </ToggleButtonGroup>
             </ButtonToolbar>
+            <Button
+              bsStyle={this.props.liveUpdate ? 'success' : 'default'}
+              disabled={this.props.timeBounds.endDate === null || this.props.timeBounds.endDate.toString().slice(0,15) !== new Date().toString().slice(0,15)}
+              onClick={this.handleLiveUpdateToggle.bind(this)}
+            >
+            Live Updates {this.props.liveUpdate ? 'Enabled' : 'Disabled'}
+            </Button>
           </Tab>
           <Tab eventKey={2} title="Count">
             <div style={style.LimitFilter}>
@@ -107,6 +130,19 @@ class FilterForm extends React.Component {
             </ToggleButtonGroup>
           </ButtonToolbar>
 
+          <Cleave htmlRef={(ref) => this.startDateInput = ref }
+                  disabled={this.state.readOnlyCalendar}
+                  placeholder="From"
+                  options={{date: true, datePattern: ['m', 'd', 'Y']}}
+                  onChange={this.handleStartDateChange.bind(this)}
+                  value={moment(this.props.timeBounds.startDate).format('MM/DD/YYYY')}/>
+          {' – '}
+          <Cleave htmlRef={(ref) => this.endDateInput = ref }
+                  disabled={this.state.readOnlyCalendar}
+                  placeholder="To"
+                  options={{date: true, datePattern: ['m', 'd', 'Y']}}
+                  onChange={this.handleEndDateChange.bind(this)}
+                  value={moment(this.props.timeBounds.endDate).format('MM/DD/YYYY')}/>
           <FilterCalendar startDate={this.props.timeBounds.startDate} endDate={this.props.timeBounds.endDate} updateFilter={this.props.updateFilter} liveUpdate={this.props.liveUpdate} toggleLiveUpdates={this.props.toggleLiveUpdates} readOnly={this.state.readOnlyCalendar} />
 
           </Tab>

@@ -35,7 +35,6 @@ class EmergencyList extends Component {
 
     componentDidUpdate(prevProps, prevState) {
       if(prevProps !== this.props){
-        console.log('update');
         this.props.markers.forEach(marker => {
           marker.addListener('click', () => this.selectEmergency(marker.id))
         })
@@ -43,7 +42,6 @@ class EmergencyList extends Component {
       if(this.refs[this.state.selectedEmergencyId] !== undefined && this.props.markers.length > 0){
         this.refs[this.state.selectedEmergencyId].scrollIntoView({block: 'center', behavior: 'smooth'});
       }
-      console.log(this.state);
     }
 
     selectEmergency(emergencyId){

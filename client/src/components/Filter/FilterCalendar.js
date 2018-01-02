@@ -107,12 +107,6 @@ export default class FilterCalendar extends React.Component {
       const disabledDays = { before: from, after: to };
       return (
         <div>
-          <div>
-            {from &&
-              to &&
-              `Showing from ${from.toLocaleDateString()} to
-              ${to.toLocaleDateString()}`}{' '}
-          </div>
             <DayPicker
             className="Range"
             toMonth={new Date()}
@@ -142,20 +136,6 @@ export default class FilterCalendar extends React.Component {
       const disabledDays = { after: new Date() };
       return(
         <div>
-        <div>
-        {!from && !to && 'Please select the first day.'}
-        {from && !to && 'Please select the last day.'}
-        {from &&
-          to &&
-          `Selected from ${from.toLocaleDateString()} to
-          ${to.toLocaleDateString()}`}{' '}
-          {from &&
-            to && (
-              <button className="link" onClick={this.handleResetClick}>
-              Reset
-              </button>
-            )}
-            </div>
             <DayPicker
             className="Range"
             numberOfMonths={2}

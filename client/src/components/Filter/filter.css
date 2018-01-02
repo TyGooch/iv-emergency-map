@@ -20,6 +20,10 @@ div label input {
   font-size: 20px;
 }
 
+.filter-nav {
+  align-content: center;
+}
+
 .live-update-toggle-button {
 
 }
