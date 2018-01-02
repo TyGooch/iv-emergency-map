@@ -15,13 +15,14 @@ class EmergencyList extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-      if( this.props.liveUpdate && this.props.emergencies.length > 0 &&  nextProps.emergencies.length > 0 && this.props.emergencies[0]._id !== nextProps.emergencies[0]._id){
+      if( this.props.liveUpdate && this.props.allEmergencies.length > 0 &&  nextProps.allEmergencies.length > 0 && this.props.allEmergencies.length < nextProps.allEmergencies.length){
         let newState = this.state;
-        let i = 0;
-        while( i < nextProps.emergencies.length && nextProps.emergencies[i]._id !== this.props.emergencies[0]._id){
-          newState.newEmergencyIds = newState.newEmergencyIds.concat(nextProps.emergencies[i]._id);
-          i += 1;
-        }
+        let prevEmergencies = this.props.allEmergencies;
+        nextProps.emergencies.forEach(emergency => {
+          if(prevEmergencies.filter(item => item._id === emergency._id).length === 0){
+            newState.newEmergencyIds = newState.newEmergencyIds.concat(emergency._id)
+          }
+        })
         this.setState(newState);
       }
     }

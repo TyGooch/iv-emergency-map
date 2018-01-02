@@ -178,6 +178,7 @@ export default class Map extends React.Component {
             </div>
             <EmergencyList
               map={ this.map }
+              allEmergencies={ this.props.emergencies }
               emergencies={ this.filterEmergencies().slice(this.filterEmergencies().length - this.props.filters.limit).reverse() }
               markers={ this.markers.reverse() }
               liveUpdate ={ this.props.filters.liveUpdate }
