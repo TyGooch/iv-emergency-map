@@ -147,19 +147,21 @@ export default class Map extends React.Component {
 
     return (
       <div>
-        <div className={this.props.filters.liveUpdate ? 'live-update-banner-enabled' : 'live-update-banner-disabled'}>
-          Live Updates {this.props.filters.liveUpdate ? 'Enabled' : 'Disabled'}
-        </div>
         <div className='app-ui-container' >
-          <div className='map-container' >
-            <div id='map' ref='map'/>
-            <FilterContainer />
+          <div className={this.props.filters.liveUpdate ? 'live-update-banner-enabled' : 'live-update-banner-disabled'}>
+          Live Updates {this.props.filters.liveUpdate ? 'Enabled' : 'Disabled'}
           </div>
-          <EmergencyList
-            map={ this.map }
-            emergencies={ this.filterEmergencies().reverse() }
-            markers={ this.markers.reverse() }
-          />
+          <div className='ui-wrapper'>
+            <div className='map-container' >
+              <div id='map' ref='map'/>
+              <FilterContainer />
+            </div>
+            <EmergencyList
+              map={ this.map }
+              emergencies={ this.filterEmergencies().reverse() }
+              markers={ this.markers.reverse() }
+            />
+          </div>
         </div>
       </div>
     );

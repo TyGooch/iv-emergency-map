@@ -8,8 +8,10 @@ div label input {
   overflow: hidden;
   display: flex;
   /* display: none; */
+  /* width:100%; */
   flex-direction: column;
-  background: rgb(238,238,238);
+  /* background: rgb(238,238,238); */
+  /* background: rgb(155, 190, 235); */
 }
 
 .filter-header {
@@ -18,26 +20,30 @@ div label input {
   background: rgb(218,218,218);
   /* color: rgb(255,255,255); */
   color: rgb(117,117,117);
-  width:100%;
+  /* width:100%; */
   text-align: center;
   font-weight: normal;
   font-size: 20px;
 }
 
 .filter-nav {
-  background: rgb(241,248,255);
-  display: flex;
-  flex-direction: row;
+  /* display: flex;
+  flex-direction: row; */
+  background: rgb(155, 190, 235);
 }
 
 .btn-nav {
-  background-color: rgb(241,248,255);
+  background-color: rgb(155, 190, 235);
+  /* color: rgb(218,218,218); */
   border-radius: 0 !important;
-  border-right: 1px solid rgb(117,117,117) !important;
+  /* border-right: 1px solid rgb(117,117,117) !important; */
   padding-left: 3px;
+  /* font-weight: bold !important; */
 }
 .btn-nav.active{
   background-color: rgb(81,159,250);
+  color: rgb(255,255,255) !important;
+  box-shadow: none !important;
 }
 
 .live-update-toggle-button {
@@ -45,11 +51,13 @@ div label input {
 }
 
 .btn-custom{
-  background-color: rgb(241,248,255);
+  background-color: rgb(148, 209, 150);
+  border:1px solid rgb(117,117,117) !important;
+  color:black;
 }
 
 .btn-custom.active{
-  background-color: rgb(81,159,250);
+  background-color: rgb(89,184,92);
 }
 
 .btn:focus {

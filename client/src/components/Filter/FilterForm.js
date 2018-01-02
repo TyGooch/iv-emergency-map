@@ -181,19 +181,28 @@ class FilterForm extends React.Component {
     bootstrapUtils.addStyle(Button, 'nav');
     return(
       <div className='filter-container' >
-        <ButtonGroup className="filter-nav" >
-          <Button bsStyle='nav' active={this.state.selectedOverlay === 'emergencyType'} ref="emergencyTypesButton" onClick={() => this.setState({selectedOverlay:'emergencyType'})}>
-            Visible Emergency Types
-          </Button>
-          <Button bsStyle='nav' active={this.state.selectedOverlay === 'emergencyLimit'} ref="emergencyLimitButton" onClick={() => this.setState({selectedOverlay:'emergencyLimit'})}>
-            Maximum Emergencies Shown
-          </Button>
-          <Button bsStyle='nav' active={this.state.selectedOverlay === 'emergencyDate'} ref="emergencyDateButton" onClick={() => this.setState({selectedOverlay:'emergencyDate'})}>
-            Range of Dates
-          </Button>
-          <Button bsStyle='nav' active={this.state.selectedOverlay === 'liveUpdates'} ref="liveUpdatesButton" onClick={() => this.setState({selectedOverlay:'liveUpdates'})}>
-            Live Updates
-          </Button>
+        <div className='filter-nav'>
+        <ButtonGroup justified  >
+          <ButtonGroup>
+            <Button bsStyle='nav' active={this.state.selectedOverlay === 'emergencyType'} ref="emergencyTypesButton" onClick={() => this.setState({selectedOverlay:'emergencyType'})}>
+              Visible Emergency Types
+            </Button>
+          </ButtonGroup>
+          <ButtonGroup>
+            <Button bsStyle='nav' active={this.state.selectedOverlay === 'emergencyLimit'} ref="emergencyLimitButton" onClick={() => this.setState({selectedOverlay:'emergencyLimit'})}>
+              Maximum Emergencies Shown
+            </Button>
+          </ButtonGroup>
+          <ButtonGroup>
+            <Button bsStyle='nav' active={this.state.selectedOverlay === 'emergencyDate'} ref="emergencyDateButton" onClick={() => this.setState({selectedOverlay:'emergencyDate'})}>
+              Range of Dates
+            </Button>
+          </ButtonGroup>
+          <ButtonGroup>
+            <Button bsStyle='nav' active={this.state.selectedOverlay === 'liveUpdates'} ref="liveUpdatesButton" onClick={() => this.setState({selectedOverlay:'liveUpdates'})}>
+              Live Updates
+            </Button>
+          </ButtonGroup>
         </ButtonGroup>
 
         <Overlay
@@ -204,9 +213,9 @@ class FilterForm extends React.Component {
           placement="top"
           target={() => ReactDOM.findDOMNode(this.refs.emergencyTypesButton)}
         >
-          <FilterPopover >
+          <FilterPopover  >
             <ButtonToolbar>
-              <ToggleButtonGroup vertical type="checkbox" defaultValue={Object.keys(this.props.types).filter(type => this.props.types[type] === true)} onChange={this.handleTypeToggle.bind(this)}>
+              <ToggleButtonGroup type="checkbox" defaultValue={Object.keys(this.props.types).filter(type => this.props.types[type] === true)} onChange={this.handleTypeToggle.bind(this)}>
                 <ToggleButton bsStyle='custom' data-key='Medical' value={'Medical'} >Medical</ToggleButton>
                 <ToggleButton bsStyle='custom' data-key='Fire' value={'Fire'}>Fire</ToggleButton>
                 <ToggleButton bsStyle='custom' data-key='Vehicle' value={'Vehicle'}>Vehicle</ToggleButton>
@@ -295,6 +304,7 @@ class FilterForm extends React.Component {
             </Button>
           </FilterPopover>
         </Overlay>
+        </div>
 
       </div>
     )

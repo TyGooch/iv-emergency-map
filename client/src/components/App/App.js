@@ -21,9 +21,7 @@ class App extends React.Component {
     return(
       <div className='main-content'>
         <PageHeader bsClass="main-header">Isla Vista Emergencies <small>Real time updates</small></PageHeader>
-        <div >
-          <EmergencyMapContainer />
-        </div>
+        <EmergencyMapContainer />
       </div>
     )
   }
