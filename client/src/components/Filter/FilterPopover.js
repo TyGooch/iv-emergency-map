@@ -12,6 +12,7 @@ export default class FilterPopover extends Component{
         style={{
           ...this.props.style,
           position: 'absolute',
+          minWidth:'18.8vw',
           backgroundColor: 'rgb(81,159,250)',
           border: '1px solid #CCC',
           borderBottom:'none',
