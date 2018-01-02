@@ -131,10 +131,10 @@ class FilterForm extends React.Component {
           <Tab eventKey={3} title="Date">
           <ButtonToolbar>
             <ToggleButtonGroup type="radio" name="timeOptions" defaultValue={'7'} onChange={this.handleDateToggle.bind(this)}>
-              <ToggleButton bsStyle='info' value={'1'}>Yesterday</ToggleButton>
-              <ToggleButton bsStyle='info' value={'7'}>1 Week Ago</ToggleButton>
-              <ToggleButton bsStyle='info' value={'31'}>1 Month Ago</ToggleButton>
-              <ToggleButton bsStyle='info' value={'custom'}>Custom Range</ToggleButton>
+              <ToggleButton bsStyle='custom' value={'1'}>Yesterday</ToggleButton>
+              <ToggleButton bsStyle='custom' value={'7'}>1 Week Ago</ToggleButton>
+              <ToggleButton bsStyle='custom' value={'31'}>1 Month Ago</ToggleButton>
+              <ToggleButton bsStyle='custom' value={'custom'}>Custom Range</ToggleButton>
             </ToggleButtonGroup>
           </ButtonToolbar>
 

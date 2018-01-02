@@ -28,6 +28,14 @@ div label input {
 
 }
 
+.btn-custom{
+  background-color: rgb(241,248,255);
+}
+
+.btn-custom.active{
+  background-color: rgb(81,159,250);
+}
+
 .btn:focus {
   outline: none !important;
   /* background-color: red !important; */
@@ -43,6 +51,10 @@ div label input {
 
 .tabs {
   background-color: black;
+}
+
+.time-options-button {
+  background-color: rgb(81,159,250);
 }
 
 .date-input {

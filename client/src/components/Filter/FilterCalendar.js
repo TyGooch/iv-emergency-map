@@ -118,6 +118,9 @@ export default class FilterCalendar extends React.Component {
 
             <Helmet>
             <style>{`
+              .Range {
+                background-color: rgb(255,255,255);
+              }
               .Range .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside) {
                 background-color: #f0f8ff !important;
                 color: #4a90e2;

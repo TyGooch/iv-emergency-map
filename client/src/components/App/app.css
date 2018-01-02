@@ -15,7 +15,8 @@ html {
   /* background: rgb(65,133,245); */
   background: rgb(218,218,218);
   /* color: rgb(255,255,255); */
-  color: rgb(51,122,183);
+  /* color: rgb(51,122,183); */
+  color: black;
 }
 
 .main-header h1{
