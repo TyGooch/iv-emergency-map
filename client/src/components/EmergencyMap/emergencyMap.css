@@ -27,7 +27,7 @@
 
 .live-update-banner-shown {
   position: absolute;
-  top:46px;
+  top:45px;
   width: 75vw;
   opacity: 1;
   transition: all 1000ms linear;
@@ -40,7 +40,7 @@
 
 .live-update-banner-hidden {
   position: absolute;
-  top:46px;
+  top:45px;
   width: 75vw;
   opacity: 0;
   transition: all 500ms linear;
