@@ -38,14 +38,14 @@ export default class FilterCalendar extends React.Component {
         to: null,
         enteredTo: null,
       });
-      return;
-    }
-    if (this.isSelectingFirstDay(from, to, day)) {
+      this.props.updateFilter('timeBounds', {startDate: day, endDate:null});
+    } else if (this.isSelectingFirstDay(from, to, day)) {
       this.setState({
         from: day,
         to: null,
         enteredTo: null,
       });
+      this.props.updateFilter('timeBounds', {startDate: day, endDate:null});
     } else {
       this.setState({
         to: day,

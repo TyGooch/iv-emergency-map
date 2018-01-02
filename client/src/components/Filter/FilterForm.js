@@ -34,9 +34,10 @@ class FilterForm extends React.Component {
   handleStartDateChange(event){
     if(event.target.value.length === 10){
       let date = new Date(event.target.value);
-      if(date <= this.props.timeBounds.endDate){
+      if(this.props.timeBounds.endDate === null || date <= this.props.timeBounds.endDate){
         this.props.updateFilter('timeBounds', {startDate: new Date(event.target.value), endDate: this.props.timeBounds.endDate})
         this.endDateInput.focus();
+        // debugger;
       } else{
         this.props.updateFilter('timeBounds', {startDate: new Date(event.target.value), endDate: null})
       }
@@ -59,6 +60,7 @@ class FilterForm extends React.Component {
       var startDate = null;
       var endDate = null;
       this.setState({readOnlyCalendar: false});
+      this.startDateInput.focus();
       this.props.toggleLiveUpdates();
     } else{
       startDate = new Date(Date.now() - (dayInterval*24*60*60*1000));
@@ -84,6 +86,12 @@ class FilterForm extends React.Component {
         }
       });
     this.props.updateFilter('types', newTypes)
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if(!this.state.readOnlyCalendar && prevState.readOnlyCalendar){
+      this.startDateInput.focus();
+    }
   }
 
   render() {
@@ -123,22 +131,26 @@ class FilterForm extends React.Component {
           <Tab eventKey={3} title="Date">
           <ButtonToolbar>
             <ToggleButtonGroup type="radio" name="timeOptions" defaultValue={'7'} onChange={this.handleDateToggle.bind(this)}>
-              <ToggleButton value={'1'}>Yesterday</ToggleButton>
-              <ToggleButton value={'7'}>1 Week Ago</ToggleButton>
-              <ToggleButton value={'31'}>1 Month Ago</ToggleButton>
-              <ToggleButton value={'custom'}>Custom Range</ToggleButton>
+              <ToggleButton bsStyle='info' value={'1'}>Yesterday</ToggleButton>
+              <ToggleButton bsStyle='info' value={'7'}>1 Week Ago</ToggleButton>
+              <ToggleButton bsStyle='info' value={'31'}>1 Month Ago</ToggleButton>
+              <ToggleButton bsStyle='info' value={'custom'}>Custom Range</ToggleButton>
             </ToggleButtonGroup>
           </ButtonToolbar>
 
           <Cleave htmlRef={(ref) => this.startDateInput = ref }
+                  className='date-input'
                   disabled={this.state.readOnlyCalendar}
+                  style={!this.state.readOnlyCalendar ? {cursor:'pointer'} : null}
                   placeholder="From"
                   options={{date: true, datePattern: ['m', 'd', 'Y']}}
                   onChange={this.handleStartDateChange.bind(this)}
                   value={moment(this.props.timeBounds.startDate).format('MM/DD/YYYY')}/>
           {' – '}
           <Cleave htmlRef={(ref) => this.endDateInput = ref }
+                  className='date-input'
                   disabled={this.state.readOnlyCalendar}
+                  style={!this.state.readOnlyCalendar ? {cursor:'pointer'} : null}
                   placeholder="To"
                   options={{date: true, datePattern: ['m', 'd', 'Y']}}
                   onChange={this.handleEndDateChange.bind(this)}
