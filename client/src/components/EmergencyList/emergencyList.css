@@ -53,9 +53,9 @@
   /* border-bottom: 3px solid red; */
 }
 
-/* .emergency-list :hover{
-  background-color: rgb(215,65,55);
-} */
+.emergency-list :hover .emergency-list-item{
+  background-color: rgb(218,218,218);
+}
 .emergency-list :hover .emergency-list span{
   background-color: white;
 }
@@ -108,6 +108,9 @@
   cursor:pointer;
   display: flex;
   flex-direction: column;
+}
+.emergency-list-item-selected :hover{
+  background-color: rgb(215, 65, 55);
 }
 
 .emergency-list-item-selected span{
