@@ -37,6 +37,9 @@
   right: 5px;
   top:0;
 }
+.emergency-list-header-badge span{
+  background-color: rgb(215,65,55);
+}
 
 .emergency-list {
   flex: 1 1 auto;
@@ -65,7 +68,8 @@
 
 .emergency-list-item {
   /* background-color: rgb(24, 160, 94); */
-  background-color: rgb(218, 218, 218);
+  /* background-color: rgb(218, 218, 218); */
+  background-color: rgb(255, 255, 255);
   /* background-color: rgb(155, 190, 235); */
   margin:3px;
   margin-bottom:0px;
@@ -160,7 +164,10 @@
   padding-left:10px;
   align-self: center;
   width: 100%;
-  border-bottom: 1px solid rgb(218,218,218);
+  border-bottom: 1px solid black;
+  display: inline;
+  position: relative;
+  padding: 3px;
 }
 
 .emergency-list-item-new p{
@@ -174,9 +181,24 @@
 
 .emergency-list-item-badge {
   /* background-color:rgb(255,255,255); */
+  display: inline;
+  position: absolute;
+  right: 5px;
+  top:3px;
+  padding: none;
+  margin: none;
+  border: none;
 }
 .emergency-list-item-badge span{
   color:rgb(255,255,255);
+  background-color: rgb(215,65,55);
+  /* padding: none;
+  margin: none; */
+  padding-left:5px;
+  padding-right:5px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  border: none;
 }
 
 /* .emergency-list-item-new .emergency-list-item-image-container{
