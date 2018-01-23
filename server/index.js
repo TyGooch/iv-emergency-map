@@ -248,7 +248,10 @@ let processingStream = new Writable({
 
       if(description.includes('Fire-')){
         if(description.includes('Out')){
-          description = description.replace('Fire-', 'Fire');
+          description = description.replace('Fire-', 'Fire ');
+        } else if(description.includes('Structure')){
+          description = description.replace('Fire-', 'Fire - ');
+
         } else{
           description = description.replace('Fire-', '');
           description = description.concat(' Fire');
@@ -462,7 +465,7 @@ app.get('*', (req, res) => {
 
 app.listen(port, host, function() {
   // getTweets();
-  seedDb();
+  // seedDb();
   console.log(`api running on port ${port}`);
   console.log(`host running on ${host}`);
 });
