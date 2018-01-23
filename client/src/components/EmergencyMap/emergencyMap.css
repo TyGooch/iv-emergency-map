@@ -73,3 +73,16 @@
   flex: 1 1 auto;
   width: 100%;
 }
+
+.labels {
+     color: white !important;
+     /* background-color: white; */
+     font-family: "Lucida Grande", "Arial", sans-serif;
+     font-size: 10px;
+     font-weight: bold;
+     text-align: center;
+     width: 40px;
+     height:20px;
+     border: 2px solid black;
+     white-space: nowrap;
+   }

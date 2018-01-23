@@ -37,7 +37,12 @@ class EmergencyList extends Component {
     componentDidUpdate(prevProps, prevState) {
       if(prevProps !== this.props){
         this.props.markers.forEach(marker => {
-          marker.addListener('click', () => this.selectEmergency(marker.id))
+          // marker.addListener('click', () => this.selectEmergency(marker.id))
+          marker.addListener('click', () => {
+            if(this.props.infowindow.getMap() !== null && typeof map !== "undefined"){
+              this.selectEmergency(marker.id)
+            }
+          })
         })
       }
       if(this.refs[this.state.selectedEmergencyId] !== undefined && this.props.markers.length > 0){

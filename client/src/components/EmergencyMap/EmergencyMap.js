@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import MarkerClusterer from 'node-js-marker-clusterer';
+// import OverlappingMarkerSpiderfier from 'overlapping-marker-spiderfier';
+
 import {mapStyle} from './mapStyle.js';
 import FilterContainer from '../Filter/FilterContainer';
 import EmergencyList from '../EmergencyList/EmergencyList';
@@ -7,6 +10,9 @@ import style from './style.js';
 import './emergencyMap.css';
 
 const google = window.google;
+const OverlappingMarkerSpiderfier = window.OverlappingMarkerSpiderfier;
+MarkerClusterer.prototype.MARKER_CLUSTER_IMAGE_PATH_ = 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+
 
 export default class Map extends React.Component {
 
@@ -17,6 +23,9 @@ export default class Map extends React.Component {
     this.getIconUrl = this.getIconUrl.bind(this);
     this.markers = [];
     this.map = null;
+    this.markerClusterer = null;
+    this.oms = null;
+    this.infowindow = null;
     this.state={
       showingUpdateBanner:false
     };
@@ -59,8 +68,67 @@ export default class Map extends React.Component {
     // close infowindow on click out
     var infowindow = this.infowindow;
     this.map.addListener('click', function() {
+      if(this.infowindow.map === null){
+        this.oms.unspiderfy();
+      }
       infowindow.close();
-    })
+    }.bind(this))
+
+    const omsOptions = { legWeight: 1.5,
+                        nearbyDistance: 0.001,
+                        // markersWontMove: true,
+                        // markersWontHide: true,
+                        nudgeRadius: 80,
+                        keepSpiderfied:true,
+                        circleFootSeparation: 30,
+                        spiralFootSeparation: 30,
+                        spiralLengthStart: 30,
+                        // spiralLengthFactor: 4,
+                        // circleSpiralSwitchover: Infinity,
+                        markerCountInBaseNudgeLevel: 2,
+                        maxNudgeCount: false,
+                        ignoreMapClick:true
+}; // Just an example of omsOptions - please set your own if necessary
+    this.oms = new OverlappingMarkerSpiderfier(this.map, omsOptions);
+    var infowindow = this.infowindow;
+    var oms = this.oms;
+    this.oms.addListener('format', function (marker, status) {
+      // console.log(marker);
+      var clusterCount = oms.markersNearMarker(marker, false).length;
+      clusterCount > 0 ? clusterCount += 1 : null;
+      // console.log(clusterCount);
+      var spiderIcon = {
+        // url: 'https://image.ibb.co/mK0LE6/spider_Icon.png',
+        // url: 'https://raw.githubusercontent.com/googlemaps/js-marker-clusterer/gh-pages/images/m3.png',
+        // url: 'https://preview.ibb.co/kpf97R/spider_Icon2.png',
+        // url: 'https://preview.ibb.co/hVpi1m/spider_Icon3.png',
+        // url: 'https://image.ibb.co/dzGWCR/spider_Icon6.png',
+        url: 'https://image.ibb.co/e2baRw/spider_Icon7.png',
+        scaledSize: new google.maps.Size(40, 40),
+        origin: new google.maps.Point(0,0),
+        anchor: new google.maps.Point(20, 30),
+        labelOrigin: new google.maps.Point(20,20)
+      };
+      // var spiderfiableIconUrl = `https://image.ibb.co/mK0LE6/spider_Icon.png`
+      //   var icon = status == OverlappingMarkerSpiderfier.markerStatus.SPIDERFIABLE
+      //       ? spiderIcon :
+      //       marker.initialIcon;
+
+        if(status == OverlappingMarkerSpiderfier.markerStatus.SPIDERFIABLE){
+          marker.label = {text: clusterCount, color: 'white', labelAnchor: new google.maps.Point(0,0)
+};
+          marker.setIcon(spiderIcon);
+        } else{
+          marker.label = null;
+          marker.setIcon(marker.initialIcon)
+        }
+    });
+    this.oms.addListener('unspiderfy', function (unspiderfied, spiderfied) {
+      console.log(unspiderfied);
+      // unspiderfied.forEach(marker => marker.spiderfy());
+    });
+
+
 
   }
 
@@ -100,6 +168,9 @@ export default class Map extends React.Component {
   }
 
   createMarkers(emergencies) {
+    // if(this.oms){
+    //   this.oms.clearMarkers();
+    // }
     emergencies.forEach(this.createMarker);
   }
 
@@ -115,14 +186,27 @@ export default class Map extends React.Component {
       url: iconUrl,
       scaledSize: new google.maps.Size(30, 30),
       origin: new google.maps.Point(0,0),
-      anchor: new google.maps.Point(0, 0)
+      anchor: new google.maps.Point(15, 15)
     };
     const marker = new google.maps.Marker({
       id: emergency._id,
       position: pos,
       map: this.map,
-      icon: icon
+      icon: icon,
+      label: {
+        text: '',
+        color: 'white',
+      },
+      labelOrigin: new google.maps.Point(0,0),
+      // labelAnchor: new google.maps.Point(0,0),
+      // labelClass : "labels",
+      // labelInBackground: false,
+      initialIcon: icon
     });
+
+    // if (this.oms) {
+    //   this.oms.clearMarkers();
+    // }
 
     var infowindow = this.infowindow;
     if(emergency.description.includes("Vehicle Acc")) {
@@ -130,6 +214,29 @@ export default class Map extends React.Component {
     }
 
     marker.addListener('click', function() {
+      // var time = new Date(emergency.time).toString();
+      // time = time.slice(0, -15);
+      //
+      // var contentString = '<div><h3>' + emergency.description + '</h3><p>' + time.slice(0,-9) + '<br>' + time.slice(-9) + '<br>' + emergency.address + '</p></div>'
+      // infowindow.setContent(contentString);
+      // infowindow.open(this.map, this);
+      infowindow.close(this.map, this);
+    });
+
+    this.markers.push(marker);
+
+    // if(this.markers.length < this.props.filters.limit){
+    //   this.markers.push(marker);
+    // } else {
+    //   this.markers.slice(0, this.props.filters.limit).forEach(marker => marker.setMap(null));
+    //   this.markers = this.markers.slice(0, this.props.filters.limit - 2);
+    //   this.markers = this.markers.concat([marker]);
+    // }
+    // this.markerCluster.addMarker(marker);
+    // marker.addListener('click', ()=>{infoWindow.close()});
+    this.oms.addMarker(marker, function(e) {
+      // iw.setContent(markerData.text);
+      // iw.open(map, marker);
       var time = new Date(emergency.time).toString();
       time = time.slice(0, -15);
 
@@ -137,13 +244,13 @@ export default class Map extends React.Component {
       infowindow.setContent(contentString);
       infowindow.open(this.map, this);
     });
+    // this.oms.addMarker(marker);
 
-    if(this.markers.length < this.props.filters.limit){
-      this.markers.push(marker);
-    } else {
-      this.markers.slice(0, this.props.filters.limit).forEach(marker => marker.setMap(null));
-      this.markers = this.markers.slice(0, this.props.filters.limit - 2).concat([marker]);
-    }
+    // var mc = new MarkerClusterer(this.map, this.markers);
+    // this.markerClusterer = new MarkerClusterer(this.map, this.markers, {
+    //   maxZoom: 15,
+    //   imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+    // });
   }
 
   getIconUrl(emergency) {
@@ -157,11 +264,22 @@ export default class Map extends React.Component {
     } else {
       return "https://image.ibb.co/cdGbFR/alert_Icon.png";
     }
+    // return "https://preview.ibb.co/cfTAgm/emergency_Icon_Drop.png"
+    // return "https://preview.ibb.co/nOACu6/emergency_Icon_Drop2.png"
+  }
+
+  getMarkers(){
+    if(this.oms){
+      return this.oms.getMarkers()
+    } else{
+      return [];
+    }
   }
 
   render() {
     this.clearMarkers();
-    this.createMarkers(this.filterEmergencies().slice(this.filterEmergencies().length - this.props.filters.limit));;
+    // this.createMarkers(this.filterEmergencies().slice(this.filterEmergencies().length - this.props.filters.limit));;
+    this.createMarkers(this.filterEmergencies().slice(0, this.props.filters.limit));;
 
     return (
       <div>
@@ -179,9 +297,11 @@ export default class Map extends React.Component {
             <EmergencyList
               map={ this.map }
               allEmergencies={ this.props.emergencies }
-              emergencies={ this.filterEmergencies().slice(this.filterEmergencies().length - this.props.filters.limit).reverse() }
-              markers={ this.markers.reverse() }
+              // emergencies={ this.filterEmergencies().slice(this.filterEmergencies().length - this.props.filters.limit).reverse() }
+              emergencies={ this.filterEmergencies().slice(0, this.props.filters.limit).reverse() }
+              markers={ this.getMarkers().reverse() }
               liveUpdate ={ this.props.filters.liveUpdate }
+              infowindow={this.infowindow}
             />
           </div>
         </div>

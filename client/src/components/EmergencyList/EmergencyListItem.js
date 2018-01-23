@@ -9,6 +9,7 @@ class EmergencyListItem extends Component {
       this.props.removeFromNewEmergencies(this.props.id);
     }
     window.google.maps.event.trigger(this.props.marker, 'click');
+    window.google.maps.event.trigger(this.props.marker, 'click');
   }
 
   getIconUrl(description) {
