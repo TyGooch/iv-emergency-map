@@ -2,9 +2,6 @@
 node_modules
 npm-debug.log
 
-# Seed data
-server/seed
-
 # Local development
 *.env
 *.dev
